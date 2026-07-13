@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@800&family=Patrick+Hand&display=swap");
+
+:root {
+  --color-paper: #ffffff;
+  --color-paper-shadow: #f0f0f0;
+  --color-grid: rgba(43, 37, 32, 0.08);
+  --color-ink: #2b2520;
+  --color-ink-light: #5c534a;
+  --color-accent: #c45c4a;
+  --color-stamp: #8b3a3a;
+  --color-ticket: #fff9ee;
+  --font-display: "Caveat", "Segoe Script", cursive;
+  --font-body: "Patrick Hand", "Comic Sans MS", cursive;
+  --font-metal: "Inter", system-ui, sans-serif;
+  --grid-size: 24px;
+  --sketch-wobble: 2deg;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: -1px -1px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

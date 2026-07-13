@@ -1,0 +1,97 @@
+.wrap {
+  position: relative;
+  height: 100%;
+  width: auto;
+  pointer-events: none;
+}
+
+.handLayer {
+  position: relative;
+  height: 100%;
+  width: auto;
+  mix-blend-mode: multiply;
+}
+
+.handImage {
+  display: block;
+  height: 100%;
+  width: auto;
+  mix-blend-mode: multiply;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.handBlur {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: auto;
+  mix-blend-mode: multiply;
+  filter: blur(10px);
+  opacity: 0.28;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.metalReveal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.metalImage {
+  display: block;
+  height: 100%;
+  width: auto;
+  mix-blend-mode: screen;
+}
+
+.eyesLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.eyeSocket {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.eyeWhite {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.pupil {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handBlur {
+    display: none;
+  }
+
+  .metalReveal {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    opacity: 0.85;
+  }
+
+  .handImage {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+}

@@ -1,0 +1,261 @@
+.hero {
+  min-height: 100dvh;
+  position: relative;
+  overflow: clip;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  --ticket-width: clamp(8rem, 15.625vw, 18.75rem);
+}
+
+.welcomeBlock {
+  position: absolute;
+  left: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(3rem, 12vh, 7rem);
+  z-index: 2;
+  max-width: min(96vw, 56rem);
+  text-align: left;
+  overflow: visible;
+  animation: fadeUp 0.8s ease both;
+}
+
+.title {
+  margin: 0 0 1.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12.5vw, 8.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  transform: rotate(-0.6deg);
+  overflow: visible;
+}
+
+.titleLine {
+  display: block;
+  overflow: visible;
+}
+
+.ctaWrap {
+  display: flex;
+  justify-content: flex-start;
+  overflow: visible;
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  min-height: 4.6rem;
+}
+
+.ctaHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.penguinStage {
+  position: fixed;
+  right: calc(50px + var(--ticket-width) + 50px);
+  bottom: calc(50vh - (var(--ticket-width) * 820 / 300) / 2);
+  height: clamp(280px, 46vh, 500px);
+  width: auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.deliveryGroup {
+  position: fixed;
+  top: 50%;
+  right: 50px;
+  width: min(32rem, 46vw);
+  height: min(88vh, 52rem);
+  transform: translateY(-50%);
+  z-index: 3;
+  pointer-events: none;
+  animation: deliverySlideIn 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 1920×1080 基准：票宽 300px、高 820px；右边缘距浏览器 50px */
+.ticketPlaceholder {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: var(--ticket-width);
+  height: calc(var(--ticket-width) * 820 / 300);
+  transform: translateY(-50%);
+  background: #d9d9d9;
+  z-index: 1;
+}
+
+.handWrap {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  width: min(28rem, 46vw);
+  z-index: 4;
+  opacity: 1;
+  transform-origin: right center;
+  pointer-events: none;
+  animation:
+    handSlideIn 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    handSlideOut 0.75s cubic-bezier(0.4, 0, 0.2, 1) 2.15s forwards;
+}
+
+.handImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.entryWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: entryReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) 2.9s both;
+}
+
+.entryStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  pointer-events: none;
+  transform: translateY(clamp(2rem, 5vh, 4rem));
+}
+
+.entryButton {
+  pointer-events: auto;
+  min-width: clamp(14rem, 18vw, 20rem) !important;
+  min-height: clamp(4.5rem, 6vw, 5.5rem) !important;
+  padding: 1.1rem 2.6rem 1rem !important;
+  font-size: clamp(1.45rem, 2vw, 1.75rem) !important;
+}
+
+.entryArrow {
+  display: block;
+  width: clamp(2rem, 3.2vw, 3.5rem);
+  height: auto;
+  animation: entryArrowBounce 1.8s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes entryArrowBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.28rem);
+  }
+}
+
+@keyframes entryReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes deliverySlideIn {
+  0% {
+    transform: translateY(-50%) translateX(120%);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes handSlideIn {
+  0% {
+    transform: translateY(-50%) scale(0.75) translateX(120%);
+  }
+  100% {
+    transform: translateY(-50%) scale(0.75) translateX(24%);
+  }
+}
+
+@keyframes handSlideOut {
+  0% {
+    transform: translateY(-50%) scale(0.75) translateX(24%);
+  }
+  100% {
+    transform: translateY(-50%) scale(0.75) translateX(120%);
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: clamp(3.2rem, 15vw, 5.2rem);
+  }
+
+  .hero {
+    --ticket-width: clamp(7rem, 18vw, 14rem);
+  }
+
+  .deliveryGroup {
+    right: max(50px, 1.25rem);
+    width: min(26rem, 52vw);
+    height: min(84vh, 44rem);
+  }
+
+  .penguinStage {
+    height: clamp(220px, 38vh, 400px);
+  }
+
+  .handWrap {
+    width: min(22rem, 52vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    --ticket-width: clamp(6rem, 22vw, 11rem);
+  }
+
+  .deliveryGroup {
+    height: min(80vh, 36rem);
+  }
+
+  .penguinStage {
+    height: clamp(180px, 32vh, 320px);
+  }
+
+  .entryButton {
+    min-width: 12.5rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entryWrap {
+    animation: none;
+    opacity: 1;
+  }
+
+  .entryArrow {
+    animation: none;
+  }
+
+  .deliveryGroup {
+    animation: none;
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  .handWrap {
+    animation: none;
+    transform: translateY(-50%) scale(0.75) translateX(24%);
+    opacity: 0;
+  }
+}
