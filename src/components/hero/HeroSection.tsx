@@ -1,44 +1,76 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { SketchButton } from "@/components/sketch/SketchButton";
+import { Button1 } from "@/components/sketch/Button1";
 import { SketchWobbleLine } from "@/components/sketch/SketchWobbleLine";
 import { WanderingCharacter } from "@/components/wander";
 import { CreativeSpotlight } from "@/components/hero/CreativeSpotlight";
-// Hero 页暂不展示企鹅探照灯；组件保留供其他页面复用 → PenguinSpotlight.tsx
-// import { PenguinSpotlight } from "@/components/hero/PenguinSpotlight";
+import { PenguinSpotlight } from "@/components/hero/PenguinSpotlight";
+import { ForewordIntro, SocialLinks } from "@/components/foreword";
+import { ExhibitionTicket } from "@/components/ticket";
+import type { IntroductionContent } from "@/lib/foreword/loadIntroduction";
 import styles from "./HeroSection.module.css";
 
 type ExhibitionPhase = "welcome" | "ticket" | "foreword";
 
 /** 与 forewordHorizonEnter 一致：0.28s delay + 0.72s duration */
 const FOREWORD_ENTER_MS = 1000;
+const TICKET_TEAR_MS = 720;
+const PASS_STAMP_HOLD_MS = 520;
 
-export function HeroSection() {
+interface HeroSectionProps {
+  introduction: IntroductionContent;
+}
+
+export function HeroSection({ introduction }: HeroSectionProps) {
   const [phase, setPhase] = useState<ExhibitionPhase>("welcome");
   const [isForewordEntering, setIsForewordEntering] = useState(false);
   const [mouse, setMouse] = useState<{ x: number; y: number } | null>(null);
+  const [ticketIssuedAt, setTicketIssuedAt] = useState<Date | null>(null);
+  const [isEntrySequenceRunning, setIsEntrySequenceRunning] = useState(false);
+  const [isTicketTearing, setIsTicketTearing] = useState(false);
+  const [isTicketTorn, setIsTicketTorn] = useState(false);
+  const [isPassStamped, setIsPassStamped] = useState(false);
 
   const ticketTaken = phase !== "welcome";
   const showWelcome = phase !== "foreword" || isForewordEntering;
-  const showEntry = phase === "ticket" && !isForewordEntering;
+  const showEntry = phase === "ticket" && !isForewordEntering && !isEntrySequenceRunning;
   const showForewordLine = phase === "foreword" || isForewordEntering;
-  const ticketPinned = phase === "foreword" || isForewordEntering;
+  const ticketPinned = phase === "foreword" || isForewordEntering || isEntrySequenceRunning;
 
   const handleTakeTicket = useCallback(() => {
     if (ticketTaken) return;
+    setTicketIssuedAt(new Date());
     setPhase("ticket");
   }, [ticketTaken]);
 
   const handleEntry = useCallback(() => {
-    if (phase !== "ticket" || isForewordEntering) return;
-    setIsForewordEntering(true);
+    if (phase !== "ticket" || isForewordEntering || isEntrySequenceRunning) return;
+    setIsEntrySequenceRunning(true);
+    setIsTicketTearing(true);
 
     window.setTimeout(() => {
-      setPhase("foreword");
-      setIsForewordEntering(false);
-    }, FOREWORD_ENTER_MS);
-  }, [phase, isForewordEntering]);
+      setIsTicketTearing(false);
+      setIsTicketTorn(true);
+      setIsPassStamped(true);
+
+      window.setTimeout(() => {
+        setIsForewordEntering(true);
+
+        window.setTimeout(() => {
+          setPhase("foreword");
+          setIsForewordEntering(false);
+          setIsEntrySequenceRunning(false);
+        }, FOREWORD_ENTER_MS);
+      }, PASS_STAMP_HOLD_MS);
+    }, TICKET_TEAR_MS);
+  }, [phase, isForewordEntering, isEntrySequenceRunning]);
+
+  const handleWelcomeSelect = useCallback(() => {
+    if (phase === "ticket") {
+      handleEntry();
+    }
+  }, [handleEntry, phase]);
 
   const handleMouseMove = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setMouse({ x: event.clientX, y: event.clientY });
@@ -63,27 +95,34 @@ export function HeroSection() {
       onMouseLeave={handleMouseLeave}
     >
       {showWelcome && (
-        <section className={welcomeClassName} aria-labelledby="hero-title">
-          <h1 id="hero-title" className={styles.title}>
-            <span className={styles.titleLine}>Welcome to</span>
-            <span className={styles.titleLine}>
-              My <CreativeSpotlight mouse={mouse} enabled={!isForewordEntering} />
-            </span>
-            <span className={styles.titleLine}>World</span>
-          </h1>
-
+        <>
+          <section className={welcomeClassName} aria-labelledby="hero-title">
+            <h1 id="hero-title" className={styles.title}>
+              <span className={styles.titleLine}>Welcome to</span>
+              <span className={styles.titleLine}>
+                My <CreativeSpotlight mouse={mouse} enabled={!isForewordEntering} />
+              </span>
+              <span className={styles.titleLine}>World</span>
+            </h1>
+          </section>
           <div className={styles.ctaWrap}>
-            <SketchButton
+            <Button1
+              size="lg"
               onClick={handleTakeTicket}
               aria-expanded={ticketTaken}
               aria-hidden={ticketTaken}
               tabIndex={ticketTaken ? -1 : undefined}
-              className={ticketTaken ? styles.ctaHidden : undefined}
+              className={[
+                styles.takeTicketButton,
+                ticketTaken ? styles.ctaHidden : undefined,
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               Take the ticket
-            </SketchButton>
+            </Button1>
           </div>
-        </section>
+        </>
       )}
 
       {ticketTaken && (
@@ -97,7 +136,17 @@ export function HeroSection() {
               .join(" ")}
             aria-live="polite"
           >
-            <div className={styles.ticketPlaceholder} aria-label="展览门票" />
+            {ticketIssuedAt && (
+              <ExhibitionTicket
+                issuedAt={ticketIssuedAt}
+                welcomeVisited={phase === "foreword"}
+                isTearing={isTicketTearing}
+                isTorn={isTicketTorn}
+                passStamped={isPassStamped}
+                onWelcomeSelect={handleWelcomeSelect}
+                className={styles.exhibitionTicket}
+              />
+            )}
           </div>
           {phase === "ticket" && !isForewordEntering && (
             <div className={styles.handWrap} aria-hidden="true">
@@ -117,9 +166,9 @@ export function HeroSection() {
       {showEntry && (
         <div className={styles.entryWrap}>
           <div className={styles.entryStack}>
-            <SketchButton size="lg" className={styles.entryButton} onClick={handleEntry}>
+            <Button1 size="lg" className={styles.entryButton} onClick={handleEntry}>
               Entry
-            </SketchButton>
+            </Button1>
             <img
               className={styles.entryArrow}
               src="/assets/svg/Arrow_Down.svg"
@@ -137,6 +186,32 @@ export function HeroSection() {
         <section className={styles.forewordStage} aria-label="扉页">
           <div
             className={[
+              styles.forewordContent,
+              isForewordEntering ? styles.forewordContentEnter : undefined,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <ForewordIntro
+              content={introduction}
+              visible={!isForewordEntering}
+              entering={isForewordEntering}
+            />
+            <div className={styles.forewordAside}>
+              <SocialLinks visible={!isForewordEntering} entering={isForewordEntering} />
+              <div className={styles.forewordNext}>
+                <Button1
+                  size="lg"
+                  className={[styles.entryButton, styles.forewordNextButton].join(" ")}
+                >
+                  Next
+                </Button1>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={[
               styles.forewordHorizon,
               isForewordEntering ? styles.forewordHorizonEnter : undefined,
             ]
@@ -144,7 +219,12 @@ export function HeroSection() {
               .join(" ")}
           >
             <div className={styles.forewordWalkZone}>
-              <WanderingCharacter characterId="walking1" enabled={showForewordLine && !isForewordEntering} />
+              <div className={styles.forewordWanderArea}>
+                <WanderingCharacter characterId="walking1" enabled={showForewordLine && !isForewordEntering} />
+              </div>
+              <div className={styles.forewordPenguin}>
+                <PenguinSpotlight mouse={mouse} enabled={showForewordLine && !isForewordEntering} />
+              </div>
             </div>
             <div className={styles.forewordLineWrap}>
               <SketchWobbleLine seed={0.37} />

@@ -8,6 +8,9 @@
   /* 票垂直居中：底边距 viewport 底部 = 50vh - 票高/2 */
   --ticket-bottom: calc(50vh - var(--ticket-height) / 2);
   --hero-action-bottom: clamp(3rem, 12vh, 7rem);
+  --entry-arrow-width: clamp(2rem, 3.2vw, 3.5rem);
+  --entry-arrow-height: calc(var(--entry-arrow-width) * 157 / 112);
+  --entry-stack-gap: clamp(0.75rem, 1.6vw, 1.25rem);
   --foreword-line-bottom: clamp(50px, 7vh, 100px);
   --foreword-line-height: clamp(1.25rem, 2.2vh, 1.75rem);
   --foreword-walk-top: clamp(5rem, 16vh, 11rem);
@@ -16,7 +19,7 @@
 .welcomeBlock {
   position: absolute;
   left: clamp(1.25rem, 4vw, 3rem);
-  bottom: var(--hero-action-bottom);
+  bottom: calc(var(--hero-action-bottom) + clamp(1rem, 2.2vh, 1.5rem));
   z-index: 2;
   max-width: min(96vw, 56rem);
   text-align: left;
@@ -41,11 +44,15 @@
 }
 
 .ctaWrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--ticket-bottom) + var(--entry-arrow-height) + var(--entry-stack-gap));
+  z-index: 4;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   overflow: visible;
-  padding: 0.35rem 0.5rem 0.35rem 0;
-  min-height: 4.6rem;
+  pointer-events: none;
 }
 
 .welcomeExit {
@@ -89,15 +96,14 @@
 }
 
 /* 1920×1080 基准：票宽 300px、高 820px；右边缘距浏览器 50px */
-.ticketPlaceholder {
+.exhibitionTicket {
   position: absolute;
   top: 50%;
   right: 0;
   width: var(--ticket-width);
-  height: calc(var(--ticket-width) * 820 / 300);
   transform: translateY(-50%);
-  background: #d9d9d9;
   z-index: 1;
+  pointer-events: auto;
 }
 
 .handWrap {
@@ -137,21 +143,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  gap: var(--entry-stack-gap);
   pointer-events: none;
 }
 
-.entryButton {
+.entryButton,
+.takeTicketButton {
   pointer-events: auto;
-  min-width: clamp(14rem, 18vw, 20rem) !important;
-  min-height: clamp(4.5rem, 6vw, 5.5rem) !important;
-  padding: 1.1rem 2.6rem 1rem !important;
-  font-size: clamp(1.45rem, 2vw, 1.75rem) !important;
 }
 
 .entryArrow {
   display: block;
-  width: clamp(2rem, 3.2vw, 3.5rem);
+  width: var(--entry-arrow-width);
   height: auto;
   animation: entryArrowBounce 1.8s ease-in-out infinite;
 }
@@ -167,7 +170,38 @@
   pointer-events: none;
 }
 
+.forewordContent {
+  position: fixed;
+  top: clamp(1.5rem, 3.704vh, 2.5rem);
+  left: clamp(1.5rem, 4.167vw, 5rem);
+  z-index: 7;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 1.25vw, 1.5rem);
+  pointer-events: auto;
+}
+
+.forewordAside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  justify-content: space-between;
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+}
+
+.forewordNext {
+  margin-left: clamp(-4rem, -3.333vw, -2rem);
+  pointer-events: auto;
+}
+
+.forewordContentEnter {
+  opacity: 0;
+}
+
 .forewordHorizon {
+  --foreword-penguin-height: clamp(160px, 26vh, 300px);
+
   position: fixed;
   left: clamp(1.25rem, 4vw, 3rem);
   right: calc(50px + var(--ticket-width) + clamp(1rem, 2vw, 2rem));
@@ -190,6 +224,30 @@
   top: 0;
   bottom: var(--foreword-line-height);
   pointer-events: none;
+}
+
+.forewordWanderArea {
+  position: absolute;
+  inset: 0
+    calc(var(--foreword-penguin-height) * 992 / 1325 + clamp(2rem, 4vw, 4rem))
+    0 0;
+  z-index: 3;
+  transform: translateY(3px);
+}
+
+.forewordPenguin {
+  position: absolute;
+  right: 0;
+  bottom: -15px;
+  height: var(--foreword-penguin-height);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.forewordNextButton {
+  min-width: clamp(11rem, 12.5vw, 15rem);
+  padding-right: clamp(1.6rem, 2vw, 2.2rem);
+  padding-left: clamp(1.6rem, 2vw, 2.2rem);
 }
 
 .forewordLineWrap {
@@ -300,6 +358,16 @@
 
   .hero {
     --ticket-width: clamp(7rem, 18vw, 14rem);
+    --foreword-walk-top: clamp(4.5rem, 14vh, 9rem);
+  }
+
+  .forewordContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .forewordHorizon {
+    --foreword-penguin-height: clamp(120px, 20vh, 220px);
   }
 
   .deliveryGroup {
@@ -314,10 +382,6 @@
 
   .handWrap {
     width: min(22rem, 52vw);
-  }
-
-  .hero {
-    --foreword-walk-top: clamp(4.5rem, 14vh, 9rem);
   }
 }
 
@@ -349,6 +413,10 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .forewordContentEnter {
+    opacity: 1;
   }
 
   .entryWrap {

@@ -1,0 +1,1 @@
+export { ExhibitionTicket } from "./ExhibitionTicket";

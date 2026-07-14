@@ -1,0 +1,82 @@
+.button1 {
+  --button1-rotate: -0.8deg;
+  --button1-hover-rotate: 0.2deg;
+  --button1-active-rotate: -0.6deg;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 13.5rem;
+  min-height: 4rem;
+  padding: 0.95rem 2.2rem 0.85rem;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 1.35rem;
+  line-height: 1;
+  transform: rotate(var(--button1-rotate));
+  transition: transform 0.2s ease;
+}
+
+.button1[data-size="sm"] {
+  min-width: clamp(4.5rem, 5vw, 6rem);
+  min-height: clamp(3rem, 4vw, 4rem);
+  padding: 0.5rem 0.9rem;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+}
+
+.button1[data-size="lg"] {
+  min-width: clamp(14rem, 18vw, 20rem);
+  min-height: clamp(4.5rem, 6vw, 5.5rem);
+  padding: 1.05rem 2.5rem 0.95rem;
+  font-size: clamp(1.45rem, 2vw, 1.75rem);
+}
+
+.button1[data-shape="square"] {
+  min-width: clamp(2.75rem, 3.333vw, 4rem);
+  min-height: clamp(2.75rem, 3.333vw, 4rem);
+  padding: 0.35rem;
+  aspect-ratio: 1;
+}
+
+.frame {
+  position: absolute;
+  inset: -4% -2%;
+  width: calc(100% + 4%);
+  height: calc(100% + 8%);
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.button1:hover:not(:disabled) {
+  transform: rotate(var(--button1-hover-rotate)) translateY(-2px);
+}
+
+.button1:active:not(:disabled) {
+  transform: rotate(var(--button1-active-rotate)) translateY(1px);
+}
+
+.button1:disabled,
+.button1[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.button1:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 8px;
+}
+
+.sketchLink {
+  text-decoration: none;
+  cursor: pointer;
+}

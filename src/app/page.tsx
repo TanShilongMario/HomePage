@@ -1,5 +1,7 @@
 import { HeroSection } from "@/components/hero/HeroSection";
+import { loadIntroduction } from "@/lib/foreword/loadIntroduction";
 
 export default function HomePage() {
-  return <HeroSection />;
+  const introduction = loadIntroduction();
+  return <HeroSection introduction={introduction} />;
 }

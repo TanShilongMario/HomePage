@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@800&family=Patrick+Hand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@800&family=LXGW+WenKai:wght@400;700&family=Patrick+Hand&family=ZCOOL+KuaiLe&display=swap");
 
 :root {
   --color-paper: #ffffff;
@@ -11,7 +11,10 @@
   --color-ticket: #fff9ee;
   --font-display: "Caveat", "Segoe Script", cursive;
   --font-body: "Patrick Hand", "Comic Sans MS", cursive;
+  --font-hand-zh: "LXGW WenKai", "Kaiti SC", "STKaiti", cursive;
+  --font-display-zh: "ZCOOL KuaiLe", "LXGW WenKai", "Kaiti SC", cursive;
   --font-metal: "Inter", system-ui, sans-serif;
+  --font-ticket: "IBM Plex Mono", "Courier New", monospace;
   --grid-size: 24px;
   --sketch-wobble: 2deg;
 }

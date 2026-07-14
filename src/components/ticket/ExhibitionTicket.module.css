@@ -1,0 +1,474 @@
+.ticket {
+  position: relative;
+  width: 100%;
+  color: #171717;
+  font-family: var(--font-ticket), "Courier New", monospace;
+  container-type: inline-size;
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18))
+    drop-shadow(0 5px 9px rgba(0, 0, 0, 0.1));
+  pointer-events: auto;
+  user-select: none;
+}
+
+.ticketTop,
+.ticketBottom {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+}
+
+.ticketTop {
+  aspect-ratio: 300 / 644;
+}
+
+.ticketBottom {
+  aspect-ratio: 300 / 176;
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
+}
+
+.ticketTop::after,
+.ticketBottom::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  opacity: 0.3;
+  background:
+    repeating-linear-gradient(
+      7deg,
+      rgba(255, 255, 255, 0.16) 0 1px,
+      transparent 1px 4px
+    ),
+    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.45), transparent 26%),
+    radial-gradient(circle at 78% 67%, rgba(0, 0, 0, 0.035), transparent 30%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.ticketTop::after {
+  -webkit-mask-image: url("/assets/svg/TicketTop.svg");
+  mask-image: url("/assets/svg/TicketTop.svg");
+}
+
+.ticketBottom::after {
+  -webkit-mask-image: url("/assets/svg/TicketBottom.svg");
+  mask-image: url("/assets/svg/TicketBottom.svg");
+}
+
+.paperShape {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.topContent {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 7.4cqw 6.2cqw 5.8cqw;
+}
+
+.header {
+  flex: none;
+}
+
+.admit,
+.byline,
+.sectionLabel,
+.topMeta,
+.issueData,
+.hallButton,
+.stubCopy {
+  text-shadow:
+    0.16px 0 rgba(0, 0, 0, 0.48),
+    -0.12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.admit {
+  margin: 0 0 2.2cqw;
+  font-size: 2.8cqw;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--font-metal), system-ui, sans-serif;
+  font-size: 10.1cqw;
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+.title > span {
+  display: block;
+}
+
+.metalWord {
+  display: inline-block;
+  padding-right: 0.08em;
+  color: transparent;
+  background: linear-gradient(
+    118deg,
+    #4f555d 0%,
+    #8fa3b8 10%,
+    #c9b4d4 18%,
+    #9eb8c8 26%,
+    #aeb4bc 34%,
+    #d4c4a8 42%,
+    #8b929a 52%,
+    #a8c8c0 60%,
+    #b8a8c8 68%,
+    #7a828a 78%,
+    #94a0b0 88%,
+    #4a5058 100%
+  );
+  background-size: 240% 240%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: ticketMetalShift 9s ease-in-out infinite;
+  filter: drop-shadow(0 0.3px 0 rgba(80, 88, 98, 0.35));
+}
+
+.byline {
+  margin: 2.2cqw 0 0;
+  font-size: 3.3cqw;
+  font-weight: 500;
+  letter-spacing: 0.035em;
+}
+
+.divider {
+  flex: none;
+  height: 0.6cqw;
+  margin: 5.2cqw 0 4.1cqw;
+  background: rgba(23, 23, 23, 0.38);
+  box-shadow: 0 0.55cqw 0 rgba(23, 23, 23, 0.08);
+}
+
+.issueData {
+  display: grid;
+  flex: none;
+  gap: 1.2cqw;
+  margin: 0 0 4.5cqw;
+  font-size: 3.5cqw;
+  line-height: 1.15;
+}
+
+.issueData > div {
+  display: grid;
+  grid-template-columns: 13cqw 1fr;
+  gap: 2cqw;
+}
+
+.issueData dt {
+  font-weight: 600;
+}
+
+.issueData dd {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.halls {
+  flex: none;
+}
+
+.sectionLabel {
+  margin: 0 0 2.1cqw;
+  font-size: 4.2cqw;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.halls ol {
+  display: grid;
+  gap: 2.15cqw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hallButton {
+  position: relative;
+  display: grid;
+  grid-template-columns: 7cqw 1fr;
+  width: 100%;
+  min-height: 12.2cqw;
+  padding: 0.9cqw 0;
+  border: 0;
+  color: #171717;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+}
+
+.hallButton:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+.hallButton[aria-disabled="true"] {
+  cursor: default;
+}
+
+.hallButton:not([aria-disabled="true"]):hover .hallCopy strong {
+  background:
+    linear-gradient(
+      178deg,
+      transparent 72%,
+      rgba(23, 23, 23, 0.72) 74% 79%,
+      transparent 81%
+    );
+}
+
+.hallButton:focus-visible {
+  outline: 0.8cqw dashed rgba(23, 23, 23, 0.8);
+  outline-offset: 0.8cqw;
+}
+
+.hallIndex {
+  padding-top: 0.7cqw;
+  font-size: 2.8cqw;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.62;
+}
+
+.hallCopy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.hallCopy strong {
+  display: table;
+  font-size: 5.2cqw;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.hallCopy small {
+  margin-top: 0.55cqw;
+  font-size: 2.85cqw;
+  line-height: 1.1;
+  opacity: 0.78;
+}
+
+.smallStamp {
+  position: absolute;
+  top: 50%;
+  right: 1cqw;
+  padding: 0.55cqw 1.1cqw 0.3cqw;
+  border: 0.55cqw solid rgba(139, 58, 58, 0.82);
+  color: rgba(139, 58, 58, 0.9);
+  font-size: 2.4cqw;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transform: translateY(-50%) rotate(-7deg);
+}
+
+.topMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1cqw;
+  margin-top: auto;
+  font-size: 2.35cqw;
+  font-weight: 500;
+  letter-spacing: 0.045em;
+  opacity: 0.68;
+}
+
+.passStamp {
+  position: absolute;
+  top: 78%;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 73cqw;
+  height: 30cqw;
+  border: 1.7cqw double rgba(139, 58, 58, 0.84);
+  border-radius: 50%;
+  color: rgba(139, 58, 58, 0.86);
+  font-family: var(--font-ticket), "Courier New", monospace;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0.4px 0 rgba(139, 58, 58, 0.45);
+  transform: translate(-50%, -50%) rotate(-11deg);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  animation: passStampIn 0.46s cubic-bezier(0.18, 0.88, 0.28, 1.18) both;
+}
+
+.passStamp::before {
+  position: absolute;
+  inset: 2.1cqw;
+  border: 0.55cqw solid rgba(139, 58, 58, 0.58);
+  border-radius: inherit;
+  content: "";
+}
+
+.passStamp span {
+  font-size: 13cqw;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.passStamp small {
+  margin-top: 1.5cqw;
+  font-size: 2.7cqw;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.perforation {
+  position: absolute;
+  top: -1px;
+  right: 5.7%;
+  left: 5.7%;
+  z-index: 4;
+  border-top: max(1px, 0.55cqw) dashed rgba(72, 72, 72, 0.44);
+  pointer-events: none;
+}
+
+.stubContent {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 36cqw 1fr;
+  align-items: center;
+  gap: 5cqw;
+  padding: 10cqw 7cqw 6cqw;
+}
+
+.qrWrap {
+  display: grid;
+  width: 36cqw;
+  height: 36cqw;
+  padding: 1.4cqw;
+  background: rgba(255, 255, 255, 0.32);
+  place-items: center;
+}
+
+.qrWrap svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
+}
+
+.stubCopy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1.4cqw;
+  font-size: 2.8cqw;
+  line-height: 1.12;
+}
+
+.stubCopy strong {
+  font-size: 3.7cqw;
+  letter-spacing: 0.055em;
+}
+
+.stubUrl,
+.stubNumber {
+  overflow: hidden;
+  font-size: 2.35cqw;
+  text-overflow: clip;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.ticketBottomTearing {
+  z-index: 6;
+  animation: tearTicketStub 0.72s cubic-bezier(0.42, 0, 0.78, 0.32) forwards;
+}
+
+.ticketBottomTorn {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes ticketMetalShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes tearTicketStub {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  14% {
+    transform: translate3d(-0.8cqw, 2.5cqw, 0) rotate(-1.5deg);
+  }
+  32% {
+    transform: translate3d(1.4cqw, 10cqw, 0) rotate(2deg);
+  }
+  100% {
+    opacity: 0.62;
+    transform: translate3d(12cqw, 112vh, 0) rotate(11deg);
+  }
+}
+
+@keyframes passStampIn {
+  0% {
+    opacity: 0;
+    filter: blur(1.5px);
+    transform: translate(-50%, -50%) rotate(-18deg) scale(1.85);
+  }
+  68% {
+    opacity: 0.94;
+    filter: blur(0);
+    transform: translate(-50%, -50%) rotate(-10deg) scale(0.94);
+  }
+  100% {
+    opacity: 0.86;
+    transform: translate(-50%, -50%) rotate(-11deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metalWord {
+    animation: none;
+  }
+
+  .ticketBottomTearing {
+    animation: none;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .passStamp {
+    animation: none;
+  }
+}

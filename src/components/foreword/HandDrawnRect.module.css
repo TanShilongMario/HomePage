@@ -1,0 +1,47 @@
+.frame {
+  position: absolute;
+  inset: 0;
+  color: var(--color-ink);
+  pointer-events: none;
+}
+
+.frame svg {
+  position: absolute;
+  display: block;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.top,
+.bottom {
+  left: -1%;
+  width: 102%;
+  height: 7px;
+}
+
+.left,
+.right {
+  top: -1%;
+  width: 7px;
+  height: 102%;
+}
+
+.top {
+  top: -3px;
+}
+
+.right {
+  right: -3px;
+}
+
+.bottom {
+  bottom: -3px;
+}
+
+.left {
+  left: -3px;
+}

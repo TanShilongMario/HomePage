@@ -2,7 +2,7 @@
 
 /**
  * 手绘企鹅 → 金属企鹅探照灯 + 眼睛跟随。
- * 当前未挂载于 Hero；其他页面可直接引入本组件。
+ * 扉页地平线上使用；Welcome 页使用 CreativeSpotlight。
  */
 import { useEffect, useRef, useState } from "react";
 import styles from "./PenguinSpotlight.module.css";
