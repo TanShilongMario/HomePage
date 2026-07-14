@@ -1,19 +1,23 @@
 # Directory Structure — Creative Exhibition Homepage
 
-> 当前为**规划目录**，仅含说明性 README / `.gitkeep`，不含实现代码。  
-> 实现阶段按页填充。
+> 根目录 **`MY_Home_Page`**（`D:\MyCode\MY_Home_Page`）。  
+> Hero 页 MVP 已实现；其余目录多为规划占位，按页迭代填充。
 
 ---
 
 ## 根目录一览
 
 ```
-MY Home Page/
-├── README.md                          # 项目总览与本地开发入口（待脚手架阶段补充）
-├── package.json                       # [待创建] 依赖与脚本
-├── next.config.ts                     # [待创建] Next 配置
-├── tsconfig.json                      # [待创建]
-├── .gitignore                         # [待创建]
+MY_Home_Page/
+├── README.md                          # 项目总览与本地开发入口
+├── package.json                       # 依赖与脚本
+├── package-lock.json
+├── next.config.ts                     # Next 配置（固定 workspace root）
+├── tsconfig.json
+├── .gitignore
+├── scripts/
+│   ├── clean-next.mjs                 # 清理 .next 缓存（dev:clean / clean）
+│   └── dev.mjs                        # 开发服务器（3001 起自动递增端口）
 ├── vercel.json                        # [可选] Vercel 重定向/头
 │
 ├── docs/                              # 文档（已建）
@@ -76,32 +80,32 @@ src/app/
 ```
 src/components/
 ├── README.md
-├── layout/
-│   ├── ExhibitShell.tsx    # 展区通用外壳（标题、回票、下一区）
-│   └── PageTransition.tsx  # 路由转场
-├── ticket/
-│   ├── TicketNav.tsx       # 票面导航
-│   ├── StampSlot.tsx       # 章槽位
-│   └── StampAnimation.tsx  # 盖章动效
-├── hero/
-│   ├── HeroWelcome.tsx
-│   ├── TakeTicketButton.tsx
-│   └── HandTicketAnimation.tsx  # 手 SVG + 出票
-├── sketch/                 # 手绘风基础控件（按你的规范逐页添加）
+├── hero/                              # [已实现] Hero 开屏
+│   ├── HeroSection.tsx                # 主交互：取票 → Entry → 扉页转场
+│   ├── CreativeSpotlight.tsx          # Creative 金属探照灯
+│   ├── PenguinSpotlight.tsx           # 企鹅探照灯（保留，Hero 暂未启用）
+│   └── *.module.css
+├── sketch/                            # [已实现] 手绘风基础控件
 │   ├── SketchButton.tsx
-│   ├── SketchFrame.tsx
-│   └── SketchTitle.tsx
-├── about/
-├── art/
-│   ├── GalleryGrid.tsx
-│   └── GalleryLightbox.tsx
-├── vibe/
-│   └── VibeProjectCard.tsx
-├── articles/
-│   ├── ArticleList.tsx
-│   └── ArticleCard.tsx
-└── ending/
-    └── StampRecap.tsx
+│   ├── SketchButtonFrame.tsx
+│   ├── SketchLink.tsx
+│   ├── SketchThoughtBubble.tsx
+│   ├── SketchWobbleLine.tsx
+│   └── *.module.css
+├── wander/                            # [已实现] 随机行走小人
+│   ├── WanderingCharacter.tsx
+│   ├── useWanderingCharacter.ts
+│   ├── characters.ts
+│   └── *.module.css
+├── layout/                            # [规划]
+│   ├── ExhibitShell.tsx
+│   └── PageTransition.tsx
+├── ticket/                            # [规划]
+├── about/                             # [规划]
+├── art/                               # [规划]
+├── vibe/                              # [规划]
+├── articles/                          # [规划]
+└── ending/                            # [规划]
 ```
 
 ---
@@ -229,3 +233,31 @@ docs/
     ├── controls/           # 逐控件绘制说明
     └── mockups/            # 页面 mockup
 ```
+
+---
+
+## 本地开发稳定性
+
+`D:\MyCode` 下存在父级 `package-lock.json`（空壳 lockfile），Next.js 15 会向上扫描 lockfile 推断 workspace root，导致：
+
+- 启动时出现 *multiple lockfiles* 警告
+- webpack / Turbopack HMR 偶发 `__webpack_modules__ is not a function`
+- React Client Manifest 找不到客户端组件
+
+**已采取的防护**（`next.config.ts`）：
+
+| 配置项 | 作用 |
+|---|---|
+| `outputFileTracingRoot` | 固定 webpack 构建与文件追踪根目录 |
+| `turbopack.root` | 固定 Turbopack 根目录（与上项保持一致） |
+| `reactStrictMode` | 开发期尽早暴露副作用问题 |
+
+**日常排障**：
+
+```bash
+npm run dev          # 正常开发（3001 起自动递增可用端口）
+npm run dev:clean    # 清 .next 缓存后启动（HMR 异常时优先试这个）
+npm run clean        # 仅清理 .next
+```
+
+若仍异常：停掉 dev → `npm run dev:clean` → 浏览器硬刷新（Ctrl+Shift+R）。

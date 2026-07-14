@@ -2,8 +2,8 @@
   position: relative;
   display: inline-block;
   vertical-align: baseline;
-  /* room for metal letter-spacing + breathe scale */
-  padding-right: 0.06em;
+  /* room for metalBreath scale(1.03) + drop-shadow bleed on the final "e" */
+  padding-right: 0.16em;
   overflow: visible;
 }
 
@@ -16,11 +16,15 @@
   letter-spacing: -0.03em;
   line-height: 1;
   white-space: nowrap;
+  padding-right: 0.1em;
 }
 
 .revealLayer {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: -0.1em;
   display: flex;
   align-items: baseline;
   overflow: visible;
