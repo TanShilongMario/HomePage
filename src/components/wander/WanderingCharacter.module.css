@@ -1,0 +1,51 @@
+.zone {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  --wander-display-height: clamp(4.5rem, 11vh, 6.5rem);
+}
+
+.characterAnchor {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform-origin: left bottom;
+  will-change: transform;
+}
+
+.thoughtBubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 0.15rem);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.character {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: var(--wander-display-height);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: default;
+  pointer-events: auto;
+  transform-origin: center bottom;
+}
+
+.character:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 6px;
+}
+
+.sprite {
+  display: block;
+  height: 100%;
+  width: auto;
+  user-select: none;
+  pointer-events: none;
+}

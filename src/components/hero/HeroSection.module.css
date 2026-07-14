@@ -4,12 +4,19 @@
   overflow: clip;
   padding: clamp(1.5rem, 4vw, 3rem);
   --ticket-width: clamp(8rem, 15.625vw, 18.75rem);
+  --ticket-height: calc(var(--ticket-width) * 820 / 300);
+  /* 票垂直居中：底边距 viewport 底部 = 50vh - 票高/2 */
+  --ticket-bottom: calc(50vh - var(--ticket-height) / 2);
+  --hero-action-bottom: clamp(3rem, 12vh, 7rem);
+  --foreword-line-bottom: clamp(50px, 7vh, 100px);
+  --foreword-line-height: clamp(1.25rem, 2.2vh, 1.75rem);
+  --foreword-walk-top: clamp(5rem, 16vh, 11rem);
 }
 
 .welcomeBlock {
   position: absolute;
   left: clamp(1.25rem, 4vw, 3rem);
-  bottom: clamp(3rem, 12vh, 7rem);
+  bottom: var(--hero-action-bottom);
   z-index: 2;
   max-width: min(96vw, 56rem);
   text-align: left;
@@ -41,11 +48,23 @@
   min-height: 4.6rem;
 }
 
+.welcomeExit {
+  animation: welcomeExitUp 0.48s cubic-bezier(0.45, 0, 0.85, 0.35) forwards;
+  pointer-events: none;
+}
+
 .ctaHidden {
   visibility: hidden;
   pointer-events: none;
 }
 
+.deliveryGroupPinned {
+  animation: none;
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+/* Hero 页暂不启用；样式保留供 PenguinSpotlight 恢复时使用
 .penguinStage {
   position: fixed;
   right: calc(50px + var(--ticket-width) + 50px);
@@ -55,6 +74,7 @@
   z-index: 2;
   pointer-events: none;
 }
+*/
 
 .deliveryGroup {
   position: fixed;
@@ -101,11 +121,14 @@
 }
 
 .entryWrap {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--ticket-bottom);
   z-index: 4;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   pointer-events: none;
   animation: entryReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) 2.9s both;
 }
@@ -116,7 +139,6 @@
   align-items: center;
   gap: clamp(0.75rem, 1.6vw, 1.25rem);
   pointer-events: none;
-  transform: translateY(clamp(2rem, 5vh, 4rem));
 }
 
 .entryButton {
@@ -132,6 +154,82 @@
   width: clamp(2rem, 3.2vw, 3.5rem);
   height: auto;
   animation: entryArrowBounce 1.8s ease-in-out infinite;
+}
+
+.entryExit {
+  animation: entryHide 0.22s ease forwards;
+}
+
+.forewordStage {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.forewordHorizon {
+  position: fixed;
+  left: clamp(1.25rem, 4vw, 3rem);
+  right: calc(50px + var(--ticket-width) + clamp(1rem, 2vw, 2rem));
+  bottom: var(--foreword-line-bottom);
+  height: calc(100dvh - var(--foreword-walk-top) - var(--foreword-line-bottom));
+  z-index: 6;
+  pointer-events: none;
+}
+
+.forewordHorizonEnter {
+  transform: translateY(calc(100% + var(--foreword-line-bottom)));
+  opacity: 0;
+  animation: forewordHorizonEnter 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.28s forwards;
+}
+
+.forewordWalkZone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: var(--foreword-line-height);
+  pointer-events: none;
+}
+
+.forewordLineWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--foreword-line-height);
+}
+
+@keyframes welcomeExitUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-115vh);
+  }
+}
+
+@keyframes entryHide {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes forewordHorizonEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--foreword-line-bottom)));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeUp {
@@ -210,12 +308,16 @@
     height: min(84vh, 44rem);
   }
 
-  .penguinStage {
+  /* .penguinStage {
     height: clamp(220px, 38vh, 400px);
-  }
+  } */
 
   .handWrap {
     width: min(22rem, 52vw);
+  }
+
+  .hero {
+    --foreword-walk-top: clamp(4.5rem, 14vh, 9rem);
   }
 }
 
@@ -228,9 +330,9 @@
     height: min(80vh, 36rem);
   }
 
-  .penguinStage {
+  /* .penguinStage {
     height: clamp(180px, 32vh, 320px);
-  }
+  } */
 
   .entryButton {
     min-width: 12.5rem !important;
@@ -238,6 +340,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .welcomeExit {
+    animation: none;
+    opacity: 0;
+  }
+
+  .forewordHorizonEnter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   .entryWrap {
     animation: none;
     opacity: 1;

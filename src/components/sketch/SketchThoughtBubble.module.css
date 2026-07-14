@@ -1,0 +1,52 @@
+.root {
+  position: relative;
+  display: block;
+  color: var(--color-ink);
+  transform: rotate(var(--thought-tilt, 0deg));
+  transform-origin: center bottom;
+  animation: thoughtPop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.svg {
+  display: block;
+  width: clamp(2.75rem, 4.2vw, 3.35rem);
+  height: auto;
+  overflow: visible;
+}
+
+.bubble,
+.dot {
+  vector-effect: non-scaling-stroke;
+}
+
+.label {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  min-width: 1.35em;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.45vw, 1.05rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+@keyframes thoughtPop {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--thought-tilt, 0deg)) scale(0.88) translateY(0.2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--thought-tilt, 0deg)) scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    animation: none;
+  }
+}
