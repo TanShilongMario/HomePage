@@ -61,6 +61,17 @@ export function WanderingCharacter({
     }
   }, [enabled]);
 
+  useEffect(() => {
+    if (!pinned || !enabled) return;
+
+    const resumeTimer = window.setTimeout(
+      () => setPinned(false),
+      2000 + Math.random() * 2000,
+    );
+
+    return () => window.clearTimeout(resumeTimer);
+  }, [enabled, pinned]);
+
   const wanderOptions = useMemo(
     () => options,
     [

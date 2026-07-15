@@ -19,10 +19,9 @@ export function SketchWobbleLine({ className, seed = 0.5 }: SketchWobbleLineProp
     >
       <path
         className={styles.stroke}
-        d={`M 8 ${16 + wobble * 0.3}
-           C 140 ${8 + wobble}, 260 ${22 - wobble * 0.5}, 400 ${14 + wobble * 0.4}
-           S 680 ${10 - wobble * 0.3}, 920 ${18 + wobble * 0.2}
-           S 1080 ${12 + wobble * 0.5}, 1192 ${15 - wobble * 0.2}`}
+        d={`M 8 ${16 + wobble * 0.12}
+           C 180 ${14.8 + wobble * 0.18}, 320 ${17.2 - wobble * 0.12}, 480 ${15.7 + wobble * 0.1}
+           S 820 ${16.8 - wobble * 0.1}, 1192 ${15.8 + wobble * 0.08}`}
         fill="none"
         stroke="currentColor"
         strokeWidth="3.5"

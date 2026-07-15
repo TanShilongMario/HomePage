@@ -87,7 +87,7 @@ export function SketchThoughtBubble({
       data-label-counter-mirrored={labelCounterMirrored ? "true" : undefined}
       aria-hidden="true"
     >
-      <svg className={styles.svg} viewBox="0 0 72 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className={styles.svg} viewBox="0 0 72 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           className={styles.bubble}
           d={bubblePath}
@@ -96,26 +96,6 @@ export function SketchThoughtBubble({
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
-        <circle
-          className={styles.dot}
-          cx={34 + wobble * 0.15}
-          cy={36 + wobble * 0.1}
-          r={3 + wobble * 0.05}
-          fill="var(--color-paper)"
-          stroke="currentColor"
-          strokeWidth="2"
-          vectorEffect="non-scaling-stroke"
-        />
-        <circle
-          className={styles.dot}
-          cx={36 - wobble * 0.1}
-          cy={41 - wobble * 0.08}
-          r={2.1 + wobble * 0.04}
-          fill="var(--color-paper)"
-          stroke="currentColor"
-          strokeWidth="1.8"
           vectorEffect="non-scaling-stroke"
         />
       </svg>

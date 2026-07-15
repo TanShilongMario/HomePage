@@ -201,12 +201,17 @@ export function HeroSection({ introduction }: HeroSectionProps) {
             <div className={styles.forewordAside}>
               <SocialLinks visible={!isForewordEntering} entering={isForewordEntering} />
               <div className={styles.forewordNext}>
-                <Button1
-                  size="lg"
-                  className={[styles.entryButton, styles.forewordNextButton].join(" ")}
-                >
-                  Next
-                </Button1>
+                <button type="button" className={styles.forewordNextButton}>
+                  <img
+                    src="/assets/svg/Button1.svg"
+                    alt=""
+                    width={361}
+                    height={171}
+                    draggable={false}
+                    aria-hidden="true"
+                  />
+                  <span>Next</span>
+                </button>
               </div>
             </div>
           </div>

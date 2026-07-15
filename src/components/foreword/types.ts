@@ -1,57 +1,42 @@
-import type { SketchSvgButtonVariant } from "@/components/sketch/sketchButtonFrames";
-
 export type ForewordLocale = "zh" | "en";
 
 export interface SocialLinkItem {
   id: string;
   label: string;
-  /** Placeholder label shown until custom icon is provided */
-  shortLabel: string;
-  href: string;
-  /** Path under public/, e.g. /assets/icons/x.svg — null uses placeholder */
-  iconSrc: string | null;
-  buttonVariant: SketchSvgButtonVariant;
+  iconSrc: string;
+  href?: string;
+  qrSrc?: string;
 }
 
 export const SOCIAL_LINKS: SocialLinkItem[] = [
   {
+    id: "wechat-personal",
+    label: "个人微信",
+    iconSrc: "/assets/svg/WeChat.svg",
+    qrSrc: "/assets/textures/WeChatQR.JPG",
+  },
+  {
     id: "x",
-    label: "X",
-    shortLabel: "X",
-    href: "https://x.com/",
-    iconSrc: null,
-    buttonVariant: 2,
+    label: "X / @TanShilong",
+    iconSrc: "/assets/svg/X.svg",
+    href: "https://x.com/TanShilong",
+  },
+  {
+    id: "github",
+    label: "GitHub / TanShilongMario",
+    iconSrc: "/assets/svg/Github.svg",
+    href: "https://github.com/TanShilongMario",
+  },
+  {
+    id: "email",
+    label: "Email / tanshilong@gmail.com",
+    iconSrc: "/assets/svg/Email.svg",
+    href: "mailto:tanshilong@gmail.com",
   },
   {
     id: "wechat-public",
     label: "微信公众号",
-    shortLabel: "公",
-    href: "#",
-    iconSrc: null,
-    buttonVariant: 3,
-  },
-  {
-    id: "wechat-personal",
-    label: "个人微信",
-    shortLabel: "微",
-    href: "#",
-    iconSrc: null,
-    buttonVariant: 4,
-  },
-  {
-    id: "email",
-    label: "Email",
-    shortLabel: "@",
-    href: "mailto:hello@example.com",
-    iconSrc: null,
-    buttonVariant: 2,
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    shortLabel: "GH",
-    href: "https://github.com/",
-    iconSrc: null,
-    buttonVariant: 3,
+    iconSrc: "/assets/svg/Public.svg",
+    qrSrc: "/assets/textures/PublicQR.jpg",
   },
 ];

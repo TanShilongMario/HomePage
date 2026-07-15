@@ -3,11 +3,14 @@
   position: relative;
   overflow: clip;
   padding: clamp(1.5rem, 4vw, 3rem);
-  --ticket-safe-vertical: clamp(3rem, 8vh, 5rem);
-  --ticket-width-cap: calc((100dvh - var(--ticket-safe-vertical)) * 300 / 820);
+  /* 标题位于文本框外，因此为标题预留顶部空间；票与文本框共用该顶边。 */
+  --foreword-content-top: clamp(4rem, 8vh, 5.5rem);
+  --ticket-safe-bottom: clamp(1rem, 3vh, 2rem);
+  --ticket-width-cap: calc(
+    (100dvh - var(--foreword-content-top) - var(--ticket-safe-bottom)) * 300 / 820
+  );
   --ticket-width: min(clamp(11.25rem, 15.625vw, 18.75rem), var(--ticket-width-cap));
   --ticket-height: calc(var(--ticket-width) * 820 / 300);
-  /* 票垂直居中：底边距 viewport 底部 = 50vh - 票高/2 */
   --ticket-bottom: calc(50vh - var(--ticket-height) / 2);
   --hero-action-bottom: clamp(3rem, 12vh, 7rem);
   --entry-arrow-width: clamp(2rem, 3.2vw, 3.5rem);
@@ -16,8 +19,6 @@
   --foreword-line-bottom: clamp(50px, 7vh, 100px);
   --foreword-line-height: clamp(1.25rem, 2.2vh, 1.75rem);
   --foreword-walk-top: clamp(5rem, 16vh, 11rem);
-  /* 扉页文本框与 Ticket 共用顶边，避免自适应后上下错位 */
-  --foreword-content-top: clamp(1.5rem, 3.704vh, 2.5rem);
 }
 
 .welcomeBlock {
@@ -71,7 +72,7 @@
 
 .deliveryGroupPinned {
   animation: none;
-  transform: translateY(-50%);
+  transform: none;
   opacity: 1;
 }
 
@@ -101,11 +102,10 @@
 
 .deliveryGroup {
   position: fixed;
-  top: 50%;
+  top: var(--foreword-content-top);
   right: 50px;
   width: min(32rem, 46vw);
-  height: min(88vh, 52rem);
-  transform: translateY(-50%);
+  height: var(--ticket-height);
   z-index: 3;
   pointer-events: none;
   animation: deliverySlideIn 1.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -114,10 +114,10 @@
 /* 1920×1080 基准：票宽 300px、高 820px；右边缘距浏览器 50px */
 .exhibitionTicket {
   position: absolute;
-  top: 50%;
+  top: 0;
   right: 0;
   width: var(--ticket-width);
-  transform: translateY(-50%);
+  transform: none;
   z-index: 1;
   pointer-events: auto;
 }
@@ -253,7 +253,7 @@
     calc(var(--foreword-penguin-height) * 992 / 1325 + clamp(2rem, 4vw, 4rem))
     0 0;
   z-index: 3;
-  transform: translateY(3px);
+  transform: translateY(calc(var(--foreword-line-height) / 2));
 }
 
 .forewordPenguin {
@@ -265,13 +265,51 @@
   pointer-events: none;
 }
 
-/* 覆盖 Button1[size=lg] 过大的 min-width，让容器贴合可视 SVG */
-.forewordNext .forewordNextButton {
-  min-width: 0;
+.forewordNextButton {
+  position: relative;
+  display: grid;
+  place-items: center;
   width: clamp(9.5rem, 11vw, 12rem);
-  min-height: clamp(3.5rem, 4.4vw, 4.25rem);
-  padding: 0.7rem 1.35rem 0.65rem;
+  aspect-ratio: 361 / 171;
+  padding: 0;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font-family: var(--font-body);
   font-size: clamp(1.2rem, 1.5vw, 1.4rem);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.forewordNextButton img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.forewordNextButton span {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .forewordNextButton:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.forewordNextButton:active {
+  transform: translateY(1px);
+}
+
+.forewordNextButton:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 5px;
 }
 
 .forewordLineWrap {
@@ -348,11 +386,11 @@
 
 @keyframes deliverySlideIn {
   0% {
-    transform: translateY(-50%) translateX(120%);
+    transform: translateX(120%);
     opacity: 0.5;
   }
   100% {
-    transform: translateY(-50%) translateX(0);
+    transform: translateX(0);
     opacity: 1;
   }
 }
@@ -398,7 +436,7 @@
   .deliveryGroup {
     right: clamp(1rem, 4vw, 2rem);
     width: min(32rem, calc(var(--ticket-width) + 2rem));
-    height: min(88vh, 52rem);
+    height: var(--ticket-height);
   }
 
   .handWrap {
@@ -412,7 +450,7 @@
   }
 
   .deliveryGroup {
-    height: min(90vh, 52rem);
+    height: var(--ticket-height);
   }
 
   /* .penguinStage {
@@ -451,7 +489,7 @@
 
   .deliveryGroup {
     animation: none;
-    transform: translateY(-50%);
+    transform: none;
     opacity: 1;
   }
 

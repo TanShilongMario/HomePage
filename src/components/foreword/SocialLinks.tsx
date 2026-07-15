@@ -1,6 +1,5 @@
 "use client";
 
-import { SketchSvgLink } from "@/components/sketch/SketchSvgLink";
 import { SOCIAL_LINKS } from "./types";
 import styles from "./SocialLinks.module.css";
 
@@ -21,27 +20,49 @@ export function SocialLinks({ visible = true, entering = false }: SocialLinksPro
   return (
     <nav className={className} aria-label="自媒体链接">
       <ul className={styles.list}>
-        {SOCIAL_LINKS.map((link) => (
-          <li key={link.id}>
-            <SketchSvgLink
-              href={link.href}
-              variant={link.buttonVariant}
-              className={styles.link}
-              target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-              rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-              aria-label={link.label}
-              title={link.label}
-            >
-              {link.iconSrc ? (
-                <img src={link.iconSrc} alt="" className={styles.icon} width={28} height={28} draggable={false} />
+        {SOCIAL_LINKS.map((link) => {
+          const icon = (
+            <img
+              src={link.iconSrc}
+              alt=""
+              className={styles.icon}
+              width={88}
+              height={75}
+              draggable={false}
+            />
+          );
+
+          return (
+            <li key={link.id} className={styles.item}>
+              {link.href ? (
+                <a
+                  href={link.href}
+                  className={styles.control}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  title={link.label}
+                >
+                  {icon}
+                </a>
               ) : (
-                <span className={styles.placeholder} aria-hidden="true">
-                  {link.shortLabel}
+                <button
+                  type="button"
+                  className={styles.control}
+                  aria-label={`${link.label}二维码`}
+                  title={link.label}
+                >
+                  {icon}
+                </button>
+              )}
+              {link.qrSrc && (
+                <span className={styles.qrPopover} role="tooltip">
+                  <img src={link.qrSrc} alt={`${link.label}二维码`} draggable={false} />
                 </span>
               )}
-            </SketchSvgLink>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

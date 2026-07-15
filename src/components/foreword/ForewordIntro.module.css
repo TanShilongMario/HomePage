@@ -5,8 +5,7 @@
   flex: 0 0 auto;
   width: min(860px, 44.792vw);
   height: min(720px, 66.667vh);
-  padding: clamp(1.1rem, 2.2vw, 1.6rem) clamp(1.25rem, 2.4vw, 1.75rem)
-    clamp(3.6rem, 6vw, 4.2rem);
+  padding: clamp(1.1rem, 2.2vw, 1.6rem) clamp(1.25rem, 2.4vw, 1.75rem);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -19,6 +18,25 @@
   opacity: 0;
 }
 
+.title {
+  position: absolute;
+  left: clamp(0.15rem, 0.5vw, 0.5rem);
+  bottom: calc(100% + clamp(0.35rem, 0.8vh, 0.6rem));
+  z-index: 1;
+  max-width: calc(100% - 48px);
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.title:lang(zh-CN) {
+  font-family: var(--font-display-zh);
+  letter-spacing: 0.04em;
+}
+
 .body {
   position: relative;
   z-index: 1;
@@ -26,8 +44,9 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-weight: 300;
   line-height: 1.55;
   color: var(--color-ink);
   scrollbar-width: thin;
@@ -35,19 +54,10 @@
 }
 
 .body:lang(zh-CN) {
-  font-family: var(--font-hand-zh);
+  font-family: var(--font-display-zh);
   letter-spacing: 0.025em;
 }
 
-.body :global(h1) {
-  margin: 0 0 0.85rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.55rem, 2.4vw, 2rem);
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.body:lang(zh-CN) :global(h1),
 .body:lang(zh-CN) :global(h2) {
   font-family: var(--font-display-zh);
   letter-spacing: 0.04em;
@@ -138,15 +148,40 @@
 
 .langToggle {
   position: absolute;
-  left: clamp(0.85rem, 1.6vw, 1.1rem);
-  bottom: clamp(0.55rem, 1.2vw, 0.85rem);
+  right: clamp(0.15rem, 0.5vw, 0.5rem);
+  bottom: calc(100% + clamp(0.35rem, 0.8vh, 0.6rem));
   z-index: 2;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-@media (max-width: 768px) {
-  .panel {
-    padding-bottom: clamp(3.2rem, 8vw, 3.8rem);
+.langToggle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .langToggle:hover {
+    transform: translateY(-2px);
   }
+}
+
+.langToggle:active {
+  transform: translateY(1px);
+}
+
+.langToggle:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -156,5 +191,9 @@
 
   .panelEntering {
     opacity: 1;
+  }
+
+  .langToggle {
+    transition: none;
   }
 }
