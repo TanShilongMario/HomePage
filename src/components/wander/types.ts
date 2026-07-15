@@ -33,6 +33,8 @@ export interface WanderRuntimeOptions {
   maxWalkFrac?: number;
   /** 沿用上一行走方向的概率，减少左右抖动 */
   continueDirectionBias?: number;
+  /** 初始水平位置占可活动宽度的比例（0–1） */
+  initialXFrac?: number;
 }
 
 export const DEFAULT_WALK_CYCLE = [0, 1, 2, 3, 2, 1] as const;

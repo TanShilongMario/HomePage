@@ -3,7 +3,9 @@
   position: relative;
   overflow: clip;
   padding: clamp(1.5rem, 4vw, 3rem);
-  --ticket-width: clamp(8rem, 15.625vw, 18.75rem);
+  --ticket-safe-vertical: clamp(3rem, 8vh, 5rem);
+  --ticket-width-cap: calc((100dvh - var(--ticket-safe-vertical)) * 300 / 820);
+  --ticket-width: min(clamp(11.25rem, 15.625vw, 18.75rem), var(--ticket-width-cap));
   --ticket-height: calc(var(--ticket-width) * 820 / 300);
   /* 票垂直居中：底边距 viewport 底部 = 50vh - 票高/2 */
   --ticket-bottom: calc(50vh - var(--ticket-height) / 2);
@@ -14,6 +16,8 @@
   --foreword-line-bottom: clamp(50px, 7vh, 100px);
   --foreword-line-height: clamp(1.25rem, 2.2vh, 1.75rem);
   --foreword-walk-top: clamp(5rem, 16vh, 11rem);
+  /* 扉页文本框与 Ticket 共用顶边，避免自适应后上下错位 */
+  --foreword-content-top: clamp(1.5rem, 3.704vh, 2.5rem);
 }
 
 .welcomeBlock {
@@ -69,6 +73,18 @@
   animation: none;
   transform: translateY(-50%);
   opacity: 1;
+}
+
+/* 扉页阶段：票顶与文本框顶对齐（不再垂直居中） */
+.deliveryGroupForewordAlign {
+  top: var(--foreword-content-top);
+  transform: none;
+  height: var(--ticket-height);
+}
+
+.deliveryGroupForewordAlign .exhibitionTicket {
+  top: 0;
+  transform: none;
 }
 
 /* Hero 页暂不启用；样式保留供 PenguinSpotlight 恢复时使用
@@ -172,7 +188,7 @@
 
 .forewordContent {
   position: fixed;
-  top: clamp(1.5rem, 3.704vh, 2.5rem);
+  top: var(--foreword-content-top);
   left: clamp(1.5rem, 4.167vw, 5rem);
   z-index: 7;
   display: flex;
@@ -188,10 +204,15 @@
   align-self: stretch;
   justify-content: space-between;
   gap: clamp(1rem, 1.6vw, 1.5rem);
+  width: fit-content;
+  min-width: 0;
 }
 
 .forewordNext {
-  margin-left: clamp(-4rem, -3.333vw, -2rem);
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  align-self: flex-start;
   pointer-events: auto;
 }
 
@@ -244,10 +265,13 @@
   pointer-events: none;
 }
 
-.forewordNextButton {
-  min-width: clamp(11rem, 12.5vw, 15rem);
-  padding-right: clamp(1.6rem, 2vw, 2.2rem);
-  padding-left: clamp(1.6rem, 2vw, 2.2rem);
+/* 覆盖 Button1[size=lg] 过大的 min-width，让容器贴合可视 SVG */
+.forewordNext .forewordNextButton {
+  min-width: 0;
+  width: clamp(9.5rem, 11vw, 12rem);
+  min-height: clamp(3.5rem, 4.4vw, 4.25rem);
+  padding: 0.7rem 1.35rem 0.65rem;
+  font-size: clamp(1.2rem, 1.5vw, 1.4rem);
 }
 
 .forewordLineWrap {
@@ -357,7 +381,7 @@
   }
 
   .hero {
-    --ticket-width: clamp(7rem, 18vw, 14rem);
+    --ticket-width: min(clamp(11.25rem, 52vmin, 18.75rem), var(--ticket-width-cap));
     --foreword-walk-top: clamp(4.5rem, 14vh, 9rem);
   }
 
@@ -368,17 +392,14 @@
 
   .forewordHorizon {
     --foreword-penguin-height: clamp(120px, 20vh, 220px);
+    right: calc(clamp(1rem, 4vw, 50px) + var(--ticket-width) + clamp(0.75rem, 2vw, 1.5rem));
   }
 
   .deliveryGroup {
-    right: max(50px, 1.25rem);
-    width: min(26rem, 52vw);
-    height: min(84vh, 44rem);
+    right: clamp(1rem, 4vw, 2rem);
+    width: min(32rem, calc(var(--ticket-width) + 2rem));
+    height: min(88vh, 52rem);
   }
-
-  /* .penguinStage {
-    height: clamp(220px, 38vh, 400px);
-  } */
 
   .handWrap {
     width: min(22rem, 52vw);
@@ -387,11 +408,11 @@
 
 @media (max-width: 480px) {
   .hero {
-    --ticket-width: clamp(6rem, 22vw, 11rem);
+    --ticket-width: min(clamp(10.75rem, 56vmin, 17.5rem), var(--ticket-width-cap));
   }
 
   .deliveryGroup {
-    height: min(80vh, 36rem);
+    height: min(90vh, 52rem);
   }
 
   /* .penguinStage {
@@ -432,6 +453,10 @@
     animation: none;
     transform: translateY(-50%);
     opacity: 1;
+  }
+
+  .deliveryGroupForewordAlign {
+    transform: none;
   }
 
   .handWrap {

@@ -17,7 +17,8 @@
 .thoughtBubble {
   position: absolute;
   left: 50%;
-  bottom: calc(100% - 0.15rem);
+  /* 与小人头顶圆（约 14% 高度）对齐，让尾巴更贴近脑袋 */
+  bottom: calc(100% - 14%);
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 1;
@@ -32,7 +33,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  cursor: default;
+  cursor: pointer;
   pointer-events: auto;
   transform-origin: center bottom;
 }

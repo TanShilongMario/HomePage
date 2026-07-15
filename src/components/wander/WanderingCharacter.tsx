@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SketchThoughtBubble } from "@/components/sketch/SketchThoughtBubble";
 import { WANDER_CHARACTERS, type WanderCharacterId } from "./characters";
 import styles from "./WanderingCharacter.module.css";
@@ -11,9 +11,10 @@ interface WanderingCharacterProps {
   characterId: WanderCharacterId;
   enabled?: boolean;
   className?: string;
-  /** 预留：点击人物（如对话气泡） */
   onCharacterClick?: (characterId: WanderCharacterId) => void;
   options?: WanderRuntimeOptions;
+  /** 点击后冻结行走，与 options 分离以避免 effect 依赖抖动 */
+  paused?: boolean;
 }
 
 export function WanderingCharacter({
@@ -22,11 +23,14 @@ export function WanderingCharacter({
   className,
   onCharacterClick,
   options,
+  paused = false,
 }: WanderingCharacterProps) {
   const character = WANDER_CHARACTERS[characterId];
   const zoneRef = useRef<HTMLDivElement>(null);
   const characterRef = useRef<HTMLButtonElement>(null);
   const [bounds, setBounds] = useState({ width: 0, height: 0 });
+  const [pinned, setPinned] = useState(false);
+  const isPaused = paused || pinned;
 
   const measureBounds = useCallback(() => {
     const zone = zoneRef.current;
@@ -51,11 +55,34 @@ export function WanderingCharacter({
     return () => observer.disconnect();
   }, [measureBounds, enabled]);
 
+  useEffect(() => {
+    if (!enabled) {
+      setPinned(false);
+    }
+  }, [enabled]);
+
+  const wanderOptions = useMemo(
+    () => options,
+    [
+      options?.initialXFrac,
+      options?.speed,
+      options?.frameIntervalMs,
+      options?.idleMinMs,
+      options?.idleMaxMs,
+      options?.idleChance,
+      options?.minWalkPx,
+      options?.minWalkFrac,
+      options?.maxWalkFrac,
+      options?.continueDirectionBias,
+    ],
+  );
+
   const { x, facingLeft, frameIndex, isMoving, isPositionReady } = useWanderingCharacter({
     character,
     enabled: enabled && bounds.width > 0,
     bounds,
-    options,
+    options: wanderOptions,
+    paused: isPaused,
   });
 
   const charWidth =
@@ -66,7 +93,13 @@ export function WanderingCharacter({
   const footInset =
     (character.footInsetRatio ?? 0) * (bounds.height > 0 ? bounds.height : character.nativeHeight);
   const translateX = facingLeft ? x + charWidth : x;
-  const showThought = isPositionReady && enabled && !isMoving;
+  const showIdleThought = isPositionReady && enabled && !isMoving && !isPaused;
+  const showAlertBubble = isPositionReady && enabled && isPaused;
+
+  const handleClick = () => {
+    setPinned((current) => !current);
+    onCharacterClick?.(characterId);
+  };
 
   return (
     <div ref={zoneRef} className={[styles.zone, className].filter(Boolean).join(" ")}>
@@ -79,18 +112,41 @@ export function WanderingCharacter({
           visibility: isPositionReady ? "visible" : "hidden",
         }}
       >
-        {showThought && (
-          <SketchThoughtBubble seed={characterId} className={styles.thoughtBubble} />
-        )}
         <button
           ref={characterRef}
           type="button"
           className={styles.character}
           style={{ transform: facingLeft ? "scaleX(-1)" : undefined }}
-          onClick={onCharacterClick ? () => onCharacterClick(characterId) : undefined}
-          aria-label={isMoving ? "正在散步的小人" : "正在思考的小人"}
+          onClick={handleClick}
+          aria-label={
+            pinned
+              ? "已停下的小人，再次点击继续行走"
+              : isMoving
+                ? "正在散步的小人，点击停下"
+                : "正在思考的小人，点击停下"
+          }
+          aria-pressed={pinned}
           data-moving={isMoving ? "true" : "false"}
+          data-pinned={pinned ? "true" : "false"}
         >
+          {showAlertBubble && (
+            <SketchThoughtBubble
+              variant="alert"
+              size="lg"
+              seed={characterId}
+              labelCounterMirrored={facingLeft}
+              className={styles.thoughtBubble}
+            />
+          )}
+          {showIdleThought && (
+            <SketchThoughtBubble
+              variant="thinking"
+              size="lg"
+              seed={characterId}
+              labelCounterMirrored={facingLeft}
+              className={styles.thoughtBubble}
+            />
+          )}
           <img
             className={styles.sprite}
             src={frameSrc}

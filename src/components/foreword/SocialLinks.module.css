@@ -17,6 +17,7 @@
 .list {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: clamp(0.65rem, 1vw, 1rem);
   margin: 0;
   padding: 0;
@@ -50,6 +51,7 @@
   .list {
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 0.45rem;
     padding: 0;
   }

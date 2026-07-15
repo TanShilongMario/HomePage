@@ -10,6 +10,7 @@ interface UseWanderingCharacterOptions {
   enabled: boolean;
   bounds: WanderBounds;
   options?: WanderRuntimeOptions;
+  paused?: boolean;
 }
 
 interface WanderState {
@@ -40,7 +41,11 @@ function computeMinWalk(maxX: number, options?: WanderRuntimeOptions) {
   return Math.max(minPx, maxX * minFrac);
 }
 
-function pickInitialX(maxX: number) {
+function pickInitialX(maxX: number, options?: WanderRuntimeOptions) {
+  const frac = options?.initialXFrac;
+  if (frac != null && Number.isFinite(frac)) {
+    return Math.min(maxX, Math.max(0, maxX * frac));
+  }
   return randomBetween(0, Math.max(0, maxX));
 }
 
@@ -96,13 +101,17 @@ export function useWanderingCharacter({
   enabled,
   bounds,
   options,
+  paused = false,
 }: UseWanderingCharacterOptions): WanderState {
   const speed = options?.speed ?? 72;
   const frameIntervalMs = options?.frameIntervalMs ?? 115;
   const idleMinMs = options?.idleMinMs ?? 1400;
   const idleMaxMs = options?.idleMaxMs ?? 3800;
+  const initialXFrac = options?.initialXFrac;
 
   const walkCycle = character.walkCycle ?? DEFAULT_WALK_CYCLE;
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
   const [state, setState] = useState<WanderState>({
     x: 0,
@@ -135,7 +144,7 @@ export function useWanderingCharacter({
     runtime.maxX = maxX;
 
     if (!runtime.positionReady) {
-      runtime.x = pickInitialX(maxX);
+      runtime.x = pickInitialX(maxX, optionsRef.current);
       runtime.targetX = runtime.x;
       runtime.positionReady = true;
       setState((prev) => ({
@@ -152,14 +161,23 @@ export function useWanderingCharacter({
     runtime.x = Math.min(runtime.x, maxX);
     runtime.targetX = Math.min(runtime.targetX, maxX);
     setState((prev) => ({ ...prev, x: runtime.x, isPositionReady: true }));
-  }, [bounds.width, bounds.height, character]);
+  }, [bounds.width, bounds.height, character, initialXFrac]);
 
   useEffect(() => {
-    if (!enabled || bounds.width <= 0 || bounds.height <= 0) return;
+    if (!paused) return;
+
+    const runtime = runtimeRef.current;
+    runtime.isMoving = false;
+    runtime.targetX = runtime.x;
+    setState((prev) => (prev.isMoving ? { ...prev, isMoving: false } : prev));
+  }, [paused]);
+
+  useEffect(() => {
+    if (!enabled || bounds.width <= 0 || bounds.height <= 0 || paused) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const { maxX } = computeMaxX(bounds, character);
-    const minWalk = computeMinWalk(maxX, options);
+    const minWalk = computeMinWalk(maxX, optionsRef.current);
 
     const runtime = runtimeRef.current;
     runtime.maxX = maxX;
@@ -185,13 +203,13 @@ export function useWanderingCharacter({
           maxX,
           minWalk,
           runtime.lastDirection,
-          options,
+          optionsRef.current,
         );
 
         if (behavior === "idle") {
           runtime.idleUntil = now + randomBetween(idleMinMs, idleMaxMs);
         } else {
-          const distance = pickWalkDistance(minWalk, maxX, options);
+          const distance = pickWalkDistance(minWalk, maxX, optionsRef.current);
           const nextTarget =
             behavior === "left"
               ? Math.max(0, runtime.x - distance)
@@ -251,7 +269,7 @@ export function useWanderingCharacter({
     frameIntervalMs,
     idleMaxMs,
     idleMinMs,
-    options,
+    paused,
     speed,
     walkCycle,
   ]);

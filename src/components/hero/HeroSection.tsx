@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { Button1 } from "@/components/sketch/Button1";
 import { SketchWobbleLine } from "@/components/sketch/SketchWobbleLine";
-import { WanderingCharacter } from "@/components/wander";
+import { WanderingCrowd } from "@/components/wander";
 import { CreativeSpotlight } from "@/components/hero/CreativeSpotlight";
 import { PenguinSpotlight } from "@/components/hero/PenguinSpotlight";
 import { ForewordIntro, SocialLinks } from "@/components/foreword";
@@ -131,6 +131,7 @@ export function HeroSection({ introduction }: HeroSectionProps) {
             className={[
               styles.deliveryGroup,
               ticketPinned ? styles.deliveryGroupPinned : undefined,
+              showForewordLine ? styles.deliveryGroupForewordAlign : undefined,
             ]
               .filter(Boolean)
               .join(" ")}
@@ -220,7 +221,7 @@ export function HeroSection({ introduction }: HeroSectionProps) {
           >
             <div className={styles.forewordWalkZone}>
               <div className={styles.forewordWanderArea}>
-                <WanderingCharacter characterId="walking1" enabled={showForewordLine && !isForewordEntering} />
+                <WanderingCrowd enabled={showForewordLine && !isForewordEntering} />
               </div>
               <div className={styles.forewordPenguin}>
                 <PenguinSpotlight mouse={mouse} enabled={showForewordLine && !isForewordEntering} />

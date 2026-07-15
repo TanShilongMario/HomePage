@@ -1,7 +1,7 @@
 .button1 {
-  --button1-rotate: -0.8deg;
-  --button1-hover-rotate: 0.2deg;
-  --button1-active-rotate: -0.6deg;
+  --button1-rotate: 0deg;
+  --button1-hover-rotate: 0deg;
+  --button1-active-rotate: 0deg;
 
   position: relative;
   display: inline-flex;
