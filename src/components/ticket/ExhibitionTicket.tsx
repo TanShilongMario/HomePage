@@ -5,21 +5,23 @@ import styles from "./ExhibitionTicket.module.css";
 
 const QR_TARGET = "https://x.com/TanShilong";
 
+export type ExhibitionHallId = "welcome" | "aigc" | "vibe" | "ending";
+
 interface ExhibitionTicketProps {
   issuedAt: Date;
-  welcomeVisited?: boolean;
+  visitedHalls?: readonly ExhibitionHallId[];
+  enabledHalls?: readonly ExhibitionHallId[];
   isTearing?: boolean;
   isTorn?: boolean;
   passStamped?: boolean;
-  onWelcomeSelect?: () => void;
+  onHallSelect?: (hall: ExhibitionHallId) => void;
   className?: string;
 }
 
 interface HallItem {
-  id: "welcome" | "aigc" | "vibe" | "ending";
+  id: ExhibitionHallId;
   title: string;
   subtitle: string;
-  enabled: boolean;
 }
 
 const HALLS: HallItem[] = [
@@ -27,25 +29,21 @@ const HALLS: HallItem[] = [
     id: "welcome",
     title: "Welcome House",
     subtitle: "About me",
-    enabled: true,
   },
   {
     id: "aigc",
     title: "AIGC Gallery",
     subtitle: "Some awesome artworks",
-    enabled: false,
   },
   {
     id: "vibe",
     title: "Vibe Coding Room",
     subtitle: "Magic tool for magic tools",
-    enabled: false,
   },
   {
     id: "ending",
     title: "Ending Show",
     subtitle: "Is it real ending?",
-    enabled: false,
   },
 ];
 
@@ -69,11 +67,12 @@ function createTicketNumber(date: Date): string {
 
 export function ExhibitionTicket({
   issuedAt,
-  welcomeVisited = false,
+  visitedHalls = [],
+  enabledHalls = ["welcome"],
   isTearing = false,
   isTorn = false,
   passStamped = false,
-  onWelcomeSelect,
+  onHallSelect,
   className,
 }: ExhibitionTicketProps) {
   const issuedLabel = formatIssuedAt(issuedAt);
@@ -127,14 +126,15 @@ export function ExhibitionTicket({
             <p className={styles.sectionLabel}>Exhibition Hall</p>
             <ol>
               {HALLS.map((hall, index) => {
-                const visited = hall.id === "welcome" && welcomeVisited;
+                const visited = visitedHalls.includes(hall.id);
+                const enabled = enabledHalls.includes(hall.id);
                 return (
                   <li key={hall.id}>
                     <button
                       type="button"
                       className={styles.hallButton}
-                      onClick={hall.enabled ? onWelcomeSelect : undefined}
-                      aria-disabled={!hall.enabled}
+                      onClick={enabled ? () => onHallSelect?.(hall.id) : undefined}
+                      aria-disabled={!enabled}
                     >
                       <span className={styles.hallIndex}>{pad(index + 1)}</span>
                       <span className={styles.hallCopy}>
@@ -156,8 +156,8 @@ export function ExhibitionTicket({
         </div>
 
         {passStamped && (
-          <div className={styles.passStamp} aria-label="Admission passed">
-            <span>PASS</span>
+          <div className={styles.passStamp} aria-label="Cleared to wander">
+            <span>WANDER</span>
             <small>ADMITTED · CORNER STUDIO</small>
           </div>
         )}

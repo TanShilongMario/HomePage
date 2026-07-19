@@ -14,6 +14,8 @@ interface SketchThoughtBubbleProps {
   size?: SketchThoughtBubbleSize;
   /** 父级已水平镜像时，单独把文字反镜像以保持可读 */
   labelCounterMirrored?: boolean;
+  /** 自定义短句；未传时 thinking 使用点号动画、alert 使用感叹号 */
+  label?: string;
 }
 
 const THINKING_FRAMES = [".", "..", "...", "..", "."] as const;
@@ -42,6 +44,7 @@ export function SketchThoughtBubble({
   variant = "thinking",
   size = "md",
   labelCounterMirrored = false,
+  label: customLabel,
 }: SketchThoughtBubbleProps) {
   const unit = seedUnit(seed);
   const wobble = unit * 5 - 2.5;
@@ -76,18 +79,29 @@ export function SketchThoughtBubble({
     C ${7 + wobble * 0.1} ${19 + wobble * 0.15}, ${9 - wobble * 0.2} ${12 - wobble * 0.1}, ${14 + wobble * 0.2} ${10 - wobble * 0.15}
     Z`;
 
-  const label = variant === "alert" ? "!" : THINKING_FRAMES[frameIndex];
+  const label = customLabel ?? (variant === "alert" ? "!" : THINKING_FRAMES[frameIndex]);
+  const bubbleWidth = `${Math.min(10, Math.max(size === "lg" ? 4.2 : 3.2, 2.5 + label.length * 0.48))}rem`;
 
   return (
     <div
       className={[styles.root, className].filter(Boolean).join(" ")}
-      style={{ ["--thought-tilt" as string]: `${tilt}deg` }}
+      style={{
+        ["--thought-tilt" as string]: `${tilt}deg`,
+        ["--thought-width" as string]: bubbleWidth,
+      }}
       data-size={size}
       data-variant={variant}
       data-label-counter-mirrored={labelCounterMirrored ? "true" : undefined}
+      data-custom-label={customLabel ? "true" : undefined}
       aria-hidden="true"
     >
-      <svg className={styles.svg} viewBox="0 0 72 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        className={styles.svg}
+        viewBox="0 0 72 40"
+        preserveAspectRatio="none"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           className={styles.bubble}
           d={bubblePath}

@@ -110,7 +110,7 @@
 
 | # | 规则 | 说明 |
 |---|---|---|
-| 1 | AIGC 作品 | 图 + 标题 + 可选描述 + 可选生成工具标签；网格或幻灯片 |
+| 1 | AIGC 作品 | 固定画框内循环展示；图 + 标题 + 可选提示词、创作思路、标签、年份、工具与系列；点击进入沉浸查看 |
 | 2 | Vibe 作品 | 卡片：名称、简述、技术标签、外链 |
 | 3 | 文章 | 列表按日期倒序；详情支持代码块与图片 |
 | 4 | 自媒体 | 扉页或文章区展示图标链；具体平台列表待补充 |
@@ -237,9 +237,9 @@ flowchart TD
 
 | 项 | 说明 |
 |---|---|
-| 存储位置 | 文章与作品元数据：仓库内 MDX/JSON；参观进度：浏览器 localStorage |
+| 存储位置 | 文章元数据：仓库内 MDX；AIGC 作品：`src/components/gallery/artworks.ts`；参观进度：浏览器 localStorage |
 | 展示入口 | 各展区路由 + 票面章状态 |
-| 组织方式 | `content/articles/*.mdx`；`content/gallery/*.json`；`content/vibe/*.json` |
+| 组织方式 | `content/articles/*.mdx`；AIGC 图片可使用 `public/assets/AIGCArtwork/` 本地文件或 HTTPS 图床；详细维护步骤见根目录 README |
 | 跨端同步 | MVP 不支持；RoadMap 可考虑账号或导出票根图片 |
 
 ---

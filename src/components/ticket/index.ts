@@ -1,1 +1,1 @@
-export { ExhibitionTicket } from "./ExhibitionTicket";
+export { ExhibitionTicket, type ExhibitionHallId } from "./ExhibitionTicket";

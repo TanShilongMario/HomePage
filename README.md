@@ -37,6 +37,91 @@ npm run dev
 | [技术架构](docs/02_architecture/ARCHITECTURE.md) | 选型、模块、状态设计 |
 | [目录结构](docs/02_architecture/DIRECTORY_STRUCTURE.md) | 工程组织规划 |
 
+## 维护 AIGC Gallery
+
+第三页的作品清单集中维护在：
+
+```text
+src/components/gallery/artworks.ts
+```
+
+画廊同时支持放在仓库内的本地图片和 `https://` 图床图片。画框、说明浮窗、循环切换和沉浸查看会自动读取同一份数据，新增作品时不需要修改画廊组件。
+
+### 增加本地图片
+
+1. 把图片放进 `public/assets/AIGCArtwork/`。
+2. 打开 `src/components/gallery/artworks.ts`。
+3. 在 `AIGC_ARTWORKS` 数组末尾增加一条作品数据。
+4. `src` 从 `/assets/AIGCArtwork/` 开始填写，不要包含 `public`。
+
+```ts
+{
+  id: "unique-artwork-id",
+  title: "Artwork title",
+  image: {
+    src: "/assets/AIGCArtwork/My_New_Artwork.png",
+    alt: "Describe what can be seen in this artwork",
+    width: 1232,
+    height: 928,
+  },
+  description: {
+    prompt: "生成这张作品时使用的提示词",
+    concept: "作品的创作思路、构图选择或实验目标",
+  },
+  tags: ["Architecture", "Surreal"],
+  year: 2026,
+  tools: ["Midjourney", "Photoshop"],
+  series: "Series name",
+  featured: false,
+},
+```
+
+`width` 和 `height` 建议填写图片的原始像素尺寸，有助于浏览器预留正确比例；画廊会自动让横图和竖图在正方形衬底中完整居中，不会裁切。
+
+### 增加图床图片
+
+图床图片的数据结构相同，只需把 `src` 换成完整的 HTTPS 地址：
+
+```ts
+image: {
+  src: "https://example.com/my-artwork.png",
+  alt: "Describe what can be seen in this artwork",
+},
+```
+
+远程图片可以不填写 `width` 和 `height`。重要作品建议使用可靠的长期图床或放回本地，避免图床防盗链、链接过期或服务不可用导致作品无法显示。
+
+### 图片加载策略（约 50 张作品）
+
+画廊允许每件作品只维护一个 `image.src`，不强制准备高清、低清两个版本。为了避免进入展馆时同时请求全部图片，组件采用邻近加载策略：
+
+1. 进入展馆时只请求当前作品。
+2. 当前作品显示成功后，后台依次预取下一张和上一张。
+3. 后台预取最多同时进行一个请求；快速切换作品时，尚未开始的旧任务会被新的相邻任务替换。
+4. 相同 URL 在当前会话中会去重；预取失败后有一分钟冷却时间，不会自动连续重试。
+5. 当前图片失败时显示手动重试入口，不进行可能加重图床限流的无限自动重试。
+
+这套策略限制的是请求并发，而不是作品总数。作品文字数据会一次加载，但图片只随浏览位置逐步加载。建议使用支持 CDN 缓存、HTTPS 和稳定外链的对象存储或正式图床，并避免给同一张图片 URL 添加每次都变化的查询参数，否则浏览器和 CDN 无法有效复用缓存。
+
+### 字段规则
+
+| 字段 | 必填 | 用途 |
+|---|---:|---|
+| `id` | 是 | 作品唯一标识；不可与其他作品重复 |
+| `title` | 是 | 说明浮窗和无障碍标签中的作品名称 |
+| `image.src` | 是 | 本地路径或完整 HTTPS 图床地址 |
+| `image.alt` | 是 | 对画面内容的简短描述，不要写文件名 |
+| `image.width/height` | 否 | 图片原始像素尺寸，本地图片建议填写 |
+| `description.prompt` | 否 | 提示词或生成条件 |
+| `description.concept` | 否 | 创作思路、过程与作品背景 |
+| `tags` | 否 | 主题、媒介或视觉类型标签 |
+| `year` | 否 | 创作年份 |
+| `tools` | 否 | 使用的生成工具或后期工具 |
+| `series` | 否 | 所属作品系列 |
+| `featured` | 否 | 为未来的精选筛选预留，目前不改变排序 |
+
+数组中的先后顺序就是画廊的播放顺序。左右按钮采用循环逻辑，因此最后一张之后会回到第一张。保存数据或替换同名图片后，开发服务会自动更新；通常刷新浏览器即可，不需要重启服务。
+
 ## 展览动线（规划）
 
 ```

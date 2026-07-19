@@ -2,6 +2,7 @@
 
 import { WanderingCharacter } from "./WanderingCharacter";
 import type { WanderCharacterId } from "./characters";
+import type { WanderDialogueScene } from "./dialogues";
 import styles from "./WanderingCrowd.module.css";
 
 const FOREWORD_CROWD: ReadonlyArray<{
@@ -16,9 +17,14 @@ const FOREWORD_CROWD: ReadonlyArray<{
 interface WanderingCrowdProps {
   enabled?: boolean;
   className?: string;
+  dialogueScene?: WanderDialogueScene;
 }
 
-export function WanderingCrowd({ enabled = true, className }: WanderingCrowdProps) {
+export function WanderingCrowd({
+  enabled = true,
+  className,
+  dialogueScene = "foreword",
+}: WanderingCrowdProps) {
   return (
     <div className={[styles.crowd, className].filter(Boolean).join(" ")}>
       {FOREWORD_CROWD.map(({ id, options }) => (
@@ -27,6 +33,7 @@ export function WanderingCrowd({ enabled = true, className }: WanderingCrowdProp
           characterId={id}
           enabled={enabled}
           options={options}
+          dialogueScene={dialogueScene}
         />
       ))}
     </div>

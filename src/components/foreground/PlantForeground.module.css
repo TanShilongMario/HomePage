@@ -1,0 +1,136 @@
+.foreground {
+  position: fixed;
+  inset: auto 0 calc(clamp(0.75rem, 2.2vh, 1.4rem) - 8px);
+  z-index: 20;
+  height: clamp(11rem, 31vh, 21rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.foregroundEntering {
+  animation: foregroundEnter 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+
+.plant {
+  --room-x: 0px;
+  --room-y: 0px;
+  --room-scale: 1;
+  --room-blur: var(--foreword-blur);
+  --active-travel-blur: 0px;
+
+  position: absolute;
+  left: var(--plant-left);
+  bottom: var(--plant-bottom);
+  z-index: var(--plant-z);
+  width: var(--plant-width);
+  transform: translate3d(var(--room-x), var(--room-y), 0) scale(var(--room-scale));
+  transform-origin: center bottom;
+  filter: blur(calc(var(--room-blur) + var(--active-travel-blur)));
+  transition:
+    transform 0.82s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, filter;
+}
+
+.foreground[data-room="gallery"] .plant {
+  --room-x: var(--gallery-x);
+  --room-y: var(--gallery-y);
+  --room-scale: var(--gallery-scale);
+  --room-blur: var(--gallery-blur);
+}
+
+.plant[data-depth="far"] {
+  --vibe-room-x: 4px;
+  --vibe-room-y: 0px;
+  --ending-room-x: 8px;
+  --ending-room-y: 1px;
+}
+
+.plant[data-depth="middle"] {
+  --vibe-room-x: 9px;
+  --vibe-room-y: -1px;
+  --ending-room-x: 18px;
+  --ending-room-y: -2px;
+}
+
+.plant[data-depth="near"] {
+  --vibe-room-x: 15px;
+  --vibe-room-y: -3px;
+  --ending-room-x: 30px;
+  --ending-room-y: -6px;
+}
+
+.foreground[data-room="vibe"] .plant {
+  --room-x: calc(var(--gallery-x) + var(--vibe-room-x));
+  --room-y: calc(var(--gallery-y) + var(--vibe-room-y));
+  --room-scale: calc(var(--gallery-scale) + 0.008);
+  --room-blur: calc(var(--gallery-blur) + 0.18px);
+}
+
+.foreground[data-room="ending"] .plant {
+  --room-x: calc(var(--gallery-x) + var(--ending-room-x));
+  --room-y: calc(var(--gallery-y) + var(--ending-room-y));
+  --room-scale: calc(var(--gallery-scale) + 0.014);
+  --room-blur: calc(var(--gallery-blur) + 0.32px);
+}
+
+.foreground[data-traveling="true"] .plant {
+  --active-travel-blur: var(--travel-blur);
+}
+
+.sway {
+  width: 100%;
+  transform: translate3d(var(--plant-hover-x), 0, 0) rotate(var(--plant-sway));
+  transform-origin: 50% 100%;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.sway img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes foregroundEnter {
+  from {
+    opacity: 0.45;
+    transform: translateY(70%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .foreground {
+    height: clamp(9rem, 25vh, 14rem);
+  }
+
+  .plant {
+    width: min(var(--plant-width), 24vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foregroundEntering {
+    animation: foregroundFadeIn 0.2s ease-out both;
+  }
+
+  .plant,
+  .sway {
+    transition: none;
+  }
+}
+
+@keyframes foregroundFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

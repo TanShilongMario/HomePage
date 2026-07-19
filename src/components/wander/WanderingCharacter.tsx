@@ -3,6 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SketchThoughtBubble } from "@/components/sketch/SketchThoughtBubble";
 import { WANDER_CHARACTERS, type WanderCharacterId } from "./characters";
+import {
+  pickWanderDialogue,
+  type WanderDialogueScene,
+} from "./dialogues";
 import styles from "./WanderingCharacter.module.css";
 import type { WanderRuntimeOptions } from "./types";
 import { useWanderingCharacter } from "./useWanderingCharacter";
@@ -13,6 +17,7 @@ interface WanderingCharacterProps {
   className?: string;
   onCharacterClick?: (characterId: WanderCharacterId) => void;
   options?: WanderRuntimeOptions;
+  dialogueScene?: WanderDialogueScene;
   /** 点击后冻结行走，与 options 分离以避免 effect 依赖抖动 */
   paused?: boolean;
 }
@@ -23,6 +28,7 @@ export function WanderingCharacter({
   className,
   onCharacterClick,
   options,
+  dialogueScene,
   paused = false,
 }: WanderingCharacterProps) {
   const character = WANDER_CHARACTERS[characterId];
@@ -30,6 +36,10 @@ export function WanderingCharacter({
   const characterRef = useRef<HTMLButtonElement>(null);
   const [bounds, setBounds] = useState({ width: 0, height: 0 });
   const [pinned, setPinned] = useState(false);
+  const [idleDialogue, setIdleDialogue] = useState("...");
+  const [clickDialogue, setClickDialogue] = useState("!");
+  const wasMovingRef = useRef(false);
+  const dialogueSceneRef = useRef(dialogueScene);
   const isPaused = paused || pinned;
 
   const measureBounds = useCallback(() => {
@@ -107,8 +117,35 @@ export function WanderingCharacter({
   const showIdleThought = isPositionReady && enabled && !isMoving && !isPaused;
   const showAlertBubble = isPositionReady && enabled && isPaused;
 
+  useEffect(() => {
+    if (!dialogueScene || dialogueSceneRef.current === dialogueScene) return;
+
+    dialogueSceneRef.current = dialogueScene;
+    setIdleDialogue(pickWanderDialogue(dialogueScene, "idle"));
+    setClickDialogue(pickWanderDialogue(dialogueScene, "click"));
+  }, [dialogueScene]);
+
+  useEffect(() => {
+    if (!dialogueScene || !isPositionReady || !enabled || isPaused) {
+      wasMovingRef.current = isMoving;
+      return;
+    }
+
+    if (!isMoving && (wasMovingRef.current || idleDialogue === "...")) {
+      setIdleDialogue((current) => pickWanderDialogue(dialogueScene, "idle", current));
+    }
+
+    wasMovingRef.current = isMoving;
+  }, [dialogueScene, enabled, idleDialogue, isMoving, isPaused, isPositionReady]);
+
   const handleClick = () => {
-    setPinned((current) => !current);
+    setPinned((current) => {
+      const nextPinned = !current;
+      if (nextPinned && dialogueScene) {
+        setClickDialogue((previous) => pickWanderDialogue(dialogueScene, "click", previous));
+      }
+      return nextPinned;
+    });
     onCharacterClick?.(characterId);
   };
 
@@ -146,6 +183,7 @@ export function WanderingCharacter({
               size="lg"
               seed={characterId}
               labelCounterMirrored={facingLeft}
+              label={clickDialogue}
               className={styles.thoughtBubble}
             />
           )}
@@ -155,6 +193,7 @@ export function WanderingCharacter({
               size="lg"
               seed={characterId}
               labelCounterMirrored={facingLeft}
+              label={idleDialogue}
               className={styles.thoughtBubble}
             />
           )}

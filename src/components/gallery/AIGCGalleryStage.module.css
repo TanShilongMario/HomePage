@@ -1,0 +1,520 @@
+.stage {
+  position: absolute;
+  inset: 0 0 var(--foreword-line-height);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.galleryTitle {
+  position: fixed;
+  left: calc(clamp(1.5rem, 4.167vw, 5rem) + clamp(0.15rem, 0.5vw, 0.5rem));
+  bottom: calc(100dvh - var(--foreword-content-top) + clamp(0.35rem, 0.8vh, 0.6rem));
+  z-index: 7;
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  opacity: 0;
+  animation: galleryTitleEnter 0.56s cubic-bezier(0.22, 1, 0.36, 1) 0.14s forwards;
+}
+
+.galleryTitleExit {
+  animation: galleryTitleExit 0.4s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+.cluster {
+  --gallery-frame-size: min(643px, 58dvh, 52vw);
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--gallery-frame-size);
+  aspect-ratio: 643 / 644;
+  opacity: 0;
+  transform: translate(-50%, 4rem) scale(0.97);
+  transform-origin: center bottom;
+  animation: galleryClusterEnter 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.clusterExit {
+  animation: galleryClusterExit 0.48s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+}
+
+.frameContent {
+  position: absolute;
+  inset: calc(5.2% + 16px);
+  z-index: 0;
+  display: grid;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e8e6e1;
+  box-shadow: inset 0 0 0 1px rgba(43, 37, 32, 0.05);
+}
+
+.frameContent::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  background: rgba(239, 237, 231, 0.48);
+  pointer-events: none;
+}
+
+.artworkBackdrop {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  width: 136%;
+  height: 136%;
+  object-fit: cover;
+  opacity: 0.46;
+  filter: blur(26px) saturate(0.72) brightness(1.12);
+  transform: scale(1.08);
+  user-select: none;
+  pointer-events: none;
+  animation: artworkBackdropReveal 0.48s ease-out both;
+}
+
+.artworkButton {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  pointer-events: auto;
+}
+
+.artworkButton:focus-visible,
+.instructionButton:focus-visible,
+.artworkNavigation button:focus-visible,
+.immersiveExit:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 4px;
+}
+
+.artworkImage {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  filter: drop-shadow(0 0.55rem 0.65rem rgba(43, 37, 32, 0.1));
+  animation: artworkReveal 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.imageUnavailable {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  color: var(--color-ink);
+  background: rgba(239, 237, 231, 0.9);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.imageUnavailable p,
+.imageUnavailable span {
+  margin: 0;
+  font-family: var(--font-body);
+}
+
+.imageUnavailable p {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 700;
+}
+
+.imageUnavailable span {
+  font-size: 0.82rem;
+  opacity: 0.66;
+}
+
+.imageUnavailable button {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.75rem;
+  border: 2px solid currentColor;
+  border-radius: 0.25rem 0.4rem 0.3rem 0.35rem;
+  color: inherit;
+  background: rgba(248, 247, 244, 0.82);
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.frameArtwork {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+
+.instruction {
+  position: absolute;
+  right: calc(100% + clamp(1.5rem, 3vw, 3.5rem));
+  bottom: 0;
+  z-index: 5;
+  width: clamp(3.75rem, 4.65vw, 5.56rem);
+  aspect-ratio: 89 / 88;
+  pointer-events: auto;
+}
+
+.instructionButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: help;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.instructionButton img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.infoPopover {
+  position: absolute;
+  right: 0;
+  left: auto;
+  bottom: calc(100% + 0.8rem);
+  width: clamp(15rem, 21vw, 18rem);
+  max-height: min(52vh, 31rem);
+  padding: clamp(1rem, 1.5vw, 1.35rem);
+  overflow-y: auto;
+  border: 2px solid rgba(43, 37, 32, 0.82);
+  border-radius: 0.3rem 0.55rem 0.25rem 0.45rem;
+  color: var(--color-ink);
+  background: rgba(248, 247, 244, 0.92);
+  box-shadow: 0.65rem 0.75rem 0 rgba(43, 37, 32, 0.13);
+  backdrop-filter: blur(12px) saturate(115%);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.6rem) scale(0.98) rotate(-0.25deg);
+  transform-origin: right bottom;
+  transition:
+    opacity 180ms ease-out,
+    visibility 180ms step-end,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.instruction:hover .infoPopover,
+.instruction:focus-within .infoPopover,
+.instruction[data-open="true"] .infoPopover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1) rotate(-0.25deg);
+  transition:
+    opacity 180ms ease-out,
+    visibility 0ms step-start,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.infoPopover h2,
+.infoPopover h3,
+.infoPopover p {
+  margin: 0;
+}
+
+.infoPopover h2 {
+  margin-bottom: 0.85rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1;
+}
+
+.infoPopover section + section {
+  margin-top: 0.8rem;
+}
+
+.infoPopover h3 {
+  margin-bottom: 0.2rem;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.infoPopover section p {
+  font-family: var(--font-body);
+  font-size: clamp(0.86rem, 1.05vw, 1rem);
+  line-height: 1.38;
+}
+
+.infoEyebrow {
+  margin-bottom: 0.25rem !important;
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.metadata {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.18rem 0.65rem;
+  margin: 0.95rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed rgba(43, 37, 32, 0.38);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.metadata dt {
+  font-weight: 700;
+}
+
+.metadata dd {
+  margin: 0;
+}
+
+.artworkNavigation {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-3.35rem, -5.2vh, -2.7rem);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.55rem, 1vw, 0.85rem);
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.artworkNavigation button {
+  display: grid;
+  place-items: center;
+  width: clamp(2.2rem, 3vw, 2.75rem);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid var(--color-ink);
+  border-radius: 0.3rem 0.45rem 0.25rem 0.4rem;
+  color: var(--color-ink);
+  background: rgba(248, 247, 244, 0.88);
+  box-shadow: 0.2rem 0.22rem 0 rgba(43, 37, 32, 0.12);
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.artworkNavigation span {
+  min-width: 3.2rem;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  text-align: center;
+}
+
+.immersiveOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 4vw, 4rem);
+  background: rgba(31, 31, 31, 0.74);
+  backdrop-filter: blur(18px) saturate(72%);
+  perspective: 1100px;
+  isolation: isolate;
+  animation: immersiveMaterialize 0.32s ease-out both;
+}
+
+.immersiveExit {
+  position: fixed;
+  top: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  padding: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(31, 31, 31, 0.48);
+  font-family: var(--font-body);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.immersiveExit span {
+  transform: translateY(-0.06em);
+}
+
+.immersiveCard {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+
+  display: grid;
+  place-items: center;
+  max-width: min(82vw, 90rem);
+  max-height: 82vh;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateZ(18px);
+  transform-style: preserve-3d;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.immersiveCardTilting {
+  transition: none;
+}
+
+.immersiveCard img {
+  display: block;
+  max-width: min(82vw, 90rem);
+  max-height: 82vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  box-shadow:
+    0 2.4rem 5rem rgba(0, 0, 0, 0.42),
+    0 0.45rem 1.1rem rgba(0, 0, 0, 0.3);
+  transform: translateZ(1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .instructionButton:hover,
+  .artworkNavigation button:hover {
+    transform: translateY(-2px);
+  }
+
+  .artworkButton:hover .artworkImage {
+    transform: scale(1.008);
+  }
+}
+
+.instructionButton:active,
+.artworkNavigation button:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+@keyframes galleryClusterEnter {
+  from { opacity: 0; transform: translate(-50%, 4rem) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes galleryClusterExit {
+  from { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  to { opacity: 0; transform: translate(-50%, 4rem) scale(0.97); }
+}
+
+@keyframes galleryTitleEnter {
+  from { opacity: 0; transform: translateY(1rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes galleryTitleExit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-1rem); }
+}
+
+@keyframes artworkReveal {
+  from { opacity: 0; transform: translateX(0.45rem) scale(0.992); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes artworkBackdropReveal {
+  from { opacity: 0; }
+  to { opacity: 0.46; }
+}
+
+@keyframes immersiveMaterialize {
+  from { opacity: 0; backdrop-filter: blur(0) saturate(100%); }
+  to { opacity: 1; backdrop-filter: blur(18px) saturate(72%); }
+}
+
+@media (max-width: 768px) {
+  .cluster {
+    --gallery-frame-size: min(56dvh, 58vw);
+  }
+
+  .galleryTitle {
+    left: calc(clamp(1.5rem, 4.167vw, 5rem) + clamp(0.15rem, 0.5vw, 0.5rem));
+  }
+
+  .instruction {
+    right: calc(100% + 0.75rem);
+    width: clamp(3rem, 10vw, 4rem);
+  }
+
+  .infoPopover {
+    width: min(15rem, 54vw);
+  }
+
+  .artworkButton {
+    padding: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cluster,
+  .clusterExit,
+  .galleryTitle,
+  .galleryTitleExit,
+  .artworkImage,
+  .immersiveOverlay {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
+
+  .cluster,
+  .clusterExit {
+    transform: translate(-50%, 0);
+  }
+
+  .immersiveCard,
+  .immersiveCardTilting {
+    transform: none !important;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .infoPopover {
+    background: #f8f7f4;
+    backdrop-filter: none;
+  }
+
+  .immersiveOverlay {
+    background: #2d2d2d;
+    backdrop-filter: none;
+  }
+}

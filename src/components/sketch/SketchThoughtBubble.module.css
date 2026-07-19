@@ -22,6 +22,16 @@
   width: clamp(3.5rem, 5.4vw, 4.6rem);
 }
 
+.root[data-custom-label="true"] .svg {
+  width: var(--thought-width);
+  height: 2.7rem;
+}
+
+.root[data-custom-label="true"][data-size="lg"] .svg {
+  width: var(--thought-width);
+  height: 3.1rem;
+}
+
 .bubble {
   vector-effect: non-scaling-stroke;
 }
@@ -39,11 +49,19 @@
   text-align: center;
   letter-spacing: 0.04em;
   pointer-events: none;
+  white-space: nowrap;
 }
 
 .root[data-size="lg"] .label {
   font-size: clamp(1.25rem, 1.9vw, 1.55rem);
   min-width: 1.1em;
+}
+
+.root[data-custom-label="true"] .label,
+.root[data-custom-label="true"][data-size="lg"] .label {
+  width: calc(100% - 1.2rem);
+  font-size: clamp(0.72rem, 1.15vw, 0.95rem);
+  letter-spacing: 0.01em;
 }
 
 .root[data-variant="alert"] .label {
@@ -54,6 +72,12 @@
 
 .root[data-variant="alert"][data-size="lg"] .label {
   font-size: clamp(1.2rem, 1.75vw, 1.45rem);
+}
+
+.root[data-custom-label="true"][data-variant="alert"] .label,
+.root[data-custom-label="true"][data-variant="alert"][data-size="lg"] .label {
+  font-size: clamp(0.72rem, 1.15vw, 0.95rem);
+  letter-spacing: 0.01em;
 }
 
 @keyframes thoughtPop {
