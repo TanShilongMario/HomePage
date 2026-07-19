@@ -29,7 +29,7 @@ export interface AIGCArtwork {
 export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
   {
     id: "gym-girl",
-    title: "Gym Girl",
+    title: "健身房的小姐姐",
     image: {
       src: "/assets/AIGCArtwork/Gym_Girl.png",
       alt: "A vertical AIGC portrait titled Gym Girl",
@@ -70,7 +70,7 @@ export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
   },
   {
     id: "yu-chuan",
-    title: "Yu Chuan",
+    title: "玉河",
     image: {
       src: "/assets/AIGCArtwork/Yu_Chuan.png",
       alt: "A vertical AIGC character artwork titled Yu Chuan",
@@ -79,47 +79,47 @@ export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
     },
     description: {
       prompt:
-        "[占位] An atmospheric eastern-fantasy portrait, layered fabric, misty light, subtle texture, poetic cinematic framing.",
+        "微缩景观，特写镜头，抽象中式山水，东方美学意境，玻璃翡翠质感，金线描边，群山之上有一个中式极简亭子，一只小船在玉做的河中，简约风格设计，宣传册封面，产品级渲染效果",
       concept:
-        "[占位] 从传统意象出发，但避免直接复刻古典画面，希望人物更像来自一个尚未写完的世界。",
+        "金丝玉带，传统中式美学的审美还是讲究！",
     },
     tags: ["Fantasy", "Portrait", "Atmosphere"],
-    year: 2026,
-    tools: ["AIGC"],
+    year: 2025,
+    tools: ["MidJourney"],
     series: "Character Studies",
   },
   {
     id: "remote-study-one",
-    title: "Remote Study 01",
+    title: "Master Poster",
     image: {
       src: "https://s3.bmp.ovh/2026/05/06/DLtOVgSJ.png",
       alt: "An AIGC artwork hosted on the external image library",
     },
     description: {
       prompt:
-        "[占位] 请在这里填写这张作品真正使用的提示词；字段支持中英文和较长文本。",
+        "以知名建筑「范斯沃斯住宅」为场景，制作一个高端的极简主义的海报 海报中心是建筑的插画形式的表达，背景是一个单词，以巨大加粗的设计风格描述的英文字体，需要与建筑相匹配，周边是一些小字，用于描述建筑的设计哲学 整体以一种极其高端的艺术海报形式呈现 用色搭配克制不张扬，与建筑有一些搭配组合，例如恰好构成了建筑的一些构件或作为建筑的整体向外的一部分延展",
       concept:
-        "[占位] 请在这里补充作品的创作动机、希望解决的问题，或生成过程中值得记录的选择。",
+        "当AI的审美与思考已经可以超越80%的人类，那我们就让它自行发挥吧",
     },
     tags: ["Remote", "Experiment"],
     year: 2026,
-    tools: ["AIGC"],
+    tools: ["GPT-image-2"],
   },
   {
     id: "remote-study-two",
-    title: "Remote Study 02",
+    title: "Chinese Ink",
     image: {
       src: "https://s3.bmp.ovh/2026/02/10/me6R7idD.png",
       alt: "A second AIGC artwork hosted on the external image library",
     },
     description: {
       prompt:
-        "[占位] 请替换为该作品的核心提示词。作品集只做阅读展示，因此不会提供复制按钮。",
+        "An old guy aniceint Chinese man holding a bamboos stick, Song Dysteny, focus on motion, ink line art, traditional Chinese inkpainting style, action movie camera, brush art, Black and White composition, breathtaking moment,",
       concept:
-        "[占位] 请描述构图、色彩、叙事或工作流上的实验重点，后续也可以增加新的说明字段。",
+        "I really love Chinese ink style",
     },
     tags: ["Remote", "Visual Study"],
     year: 2026,
-    tools: ["AIGC"],
+    tools: ["MidJourney"],
   },
 ];
