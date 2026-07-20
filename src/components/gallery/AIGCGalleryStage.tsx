@@ -7,8 +7,10 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { useMediaQuery } from "@/components/hero/useMediaQuery";
 import {
   clearAdjacentArtworkQueue,
   markArtworkImageLoaded,
@@ -105,6 +107,101 @@ function wrapIndex(index: number, length: number) {
   return (index + length) % length;
 }
 
+function ArtworkInfoBody({ artwork }: { artwork: AIGCArtwork }) {
+  const description = artwork.description;
+  const hasMetadata = Boolean(artwork.tools?.length || artwork.year);
+
+  return (
+    <>
+      <p className={styles.infoEyebrow}>Artwork note</p>
+      <h2>{artwork.title}</h2>
+      {description?.prompt && (
+        <section>
+          <h3>Prompt</h3>
+          <p>{description.prompt}</p>
+        </section>
+      )}
+      {description?.concept && (
+        <section>
+          <h3>Creative idea</h3>
+          <p>{description.concept}</p>
+        </section>
+      )}
+      {hasMetadata && (
+        <dl className={styles.metadata}>
+          {artwork.year && (
+            <>
+              <dt>Year</dt>
+              <dd>{artwork.year}</dd>
+            </>
+          )}
+          {artwork.tools?.length ? (
+            <>
+              <dt>Tools</dt>
+              <dd>{artwork.tools.join(" · ")}</dd>
+            </>
+          ) : null}
+        </dl>
+      )}
+    </>
+  );
+}
+
+function InfoOverlay({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const exitButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    exitButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      className={styles.infoOverlay}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${title} information`}
+    >
+      <button
+        ref={exitButtonRef}
+        type="button"
+        className={styles.immersiveExit}
+        onClick={onClose}
+        aria-label="Close artwork information"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+      <button
+        type="button"
+        className={styles.infoOverlayBackdrop}
+        aria-label="Close artwork information"
+        onClick={onClose}
+      />
+      <div className={styles.infoOverlayCard}>{children}</div>
+    </div>,
+    document.body,
+  );
+}
+
 /** 固定画框、循环作品、说明浮窗与沉浸查看共同组成 AIGC 展馆。 */
 export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGalleryStageProps) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -113,9 +210,11 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
   const [failedArtworkId, setFailedArtworkId] = useState<string | null>(null);
   const [imageAttempt, setImageAttempt] = useState(0);
   const infoId = useId();
+  const isCompactLayout = useMediaQuery("(max-width: 768px)");
   const artwork = AIGC_ARTWORKS[activeIndex];
 
   const closeImmersive = useCallback(() => setImmersiveOpen(false), []);
+  const closeInfoOverlay = useCallback(() => setInfoOpen(false), []);
 
   const moveArtwork = (direction: -1 | 1) => {
     setActiveIndex((current) => wrapIndex(current + direction, AIGC_ARTWORKS.length));
@@ -149,11 +248,10 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
 
   if (!active || !artwork) return null;
 
-  const description = artwork.description;
-  const hasMetadata = artwork.tools?.length || artwork.year;
+  const useInfoOverlay = isCompactLayout === true;
 
   return (
-    <div className={styles.stage}>
+    <div className={styles.stage} data-compact={useInfoOverlay ? "true" : undefined}>
       <h1 className={[styles.galleryTitle, exiting ? styles.galleryTitleExit : undefined].filter(Boolean).join(" ")}>
         AIGC Gallery
       </h1>
@@ -217,8 +315,9 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
 
         <div
           className={styles.instruction}
-          data-open={infoOpen}
+          data-open={!useInfoOverlay && infoOpen ? "true" : "false"}
           onBlur={(event) => {
+            if (useInfoOverlay) return;
             if (!event.currentTarget.contains(event.relatedTarget)) setInfoOpen(false);
           }}
         >
@@ -228,7 +327,7 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
             onClick={() => setInfoOpen((open) => !open)}
             aria-label={`Show information for ${artwork.title}`}
             aria-expanded={infoOpen}
-            aria-controls={infoId}
+            aria-controls={useInfoOverlay ? undefined : infoId}
           >
             <img
               src="/assets/svg/InstructionFrame.svg"
@@ -238,30 +337,19 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
               draggable={false}
               aria-hidden="true"
             />
+            <span className={styles.instructionSkeleton} aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
 
-          <aside id={infoId} className={styles.infoPopover} aria-label="Artwork information">
-            <p className={styles.infoEyebrow}>Artwork note</p>
-            <h2>{artwork.title}</h2>
-            {description?.prompt && (
-              <section>
-                <h3>Prompt</h3>
-                <p>{description.prompt}</p>
-              </section>
-            )}
-            {description?.concept && (
-              <section>
-                <h3>Creative idea</h3>
-                <p>{description.concept}</p>
-              </section>
-            )}
-            {hasMetadata && (
-              <dl className={styles.metadata}>
-                {artwork.year && <><dt>Year</dt><dd>{artwork.year}</dd></>}
-                {artwork.tools?.length && <><dt>Tools</dt><dd>{artwork.tools.join(" · ")}</dd></>}
-              </dl>
-            )}
-          </aside>
+          {!useInfoOverlay && (
+            <aside id={infoId} className={styles.infoPopover} aria-label="Artwork information">
+              <ArtworkInfoBody artwork={artwork} />
+            </aside>
+          )}
         </div>
 
         <nav className={styles.artworkNavigation} aria-label="Artwork navigation">
@@ -272,6 +360,11 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
       </div>
 
       {immersiveOpen && <ImmersiveArtwork artwork={artwork} onClose={closeImmersive} />}
+      {useInfoOverlay && infoOpen && (
+        <InfoOverlay title={artwork.title} onClose={closeInfoOverlay}>
+          <ArtworkInfoBody artwork={artwork} />
+        </InfoOverlay>
+      )}
     </div>
   );
 }

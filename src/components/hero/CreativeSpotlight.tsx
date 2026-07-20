@@ -9,9 +9,15 @@ const NEARBY_PADDING = 96;
 interface CreativeSpotlightProps {
   mouse: { x: number; y: number } | null;
   enabled?: boolean;
+  /** spotlight: 鼠标靠近才露金属；always: 常显金属呼吸（移动端） */
+  mode?: "spotlight" | "always";
 }
 
-export function CreativeSpotlight({ mouse, enabled = true }: CreativeSpotlightProps) {
+export function CreativeSpotlight({
+  mouse,
+  enabled = true,
+  mode = "spotlight",
+}: CreativeSpotlightProps) {
   const wrapRef = useRef<HTMLSpanElement>(null);
   const [mask, setMask] = useState<{ x: number; y: number; active: boolean }>({
     x: -999,
@@ -20,6 +26,11 @@ export function CreativeSpotlight({ mouse, enabled = true }: CreativeSpotlightPr
   });
 
   useEffect(() => {
+    if (mode === "always") {
+      setMask((prev) => ({ ...prev, active: enabled }));
+      return;
+    }
+
     if (!enabled || !mouse || !wrapRef.current) {
       setMask((prev) => ({ ...prev, active: false }));
       return;
@@ -35,25 +46,41 @@ export function CreativeSpotlight({ mouse, enabled = true }: CreativeSpotlightPr
       y: mouse.y - rect.top,
       active,
     });
-  }, [mouse, enabled]);
+  }, [mouse, enabled, mode]);
 
   const maskStyle =
-    mask.active
-      ? ({
-          WebkitMaskImage: `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${mask.x}px ${mask.y}px, #000 0%, transparent 100%)`,
-          maskImage: `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${mask.x}px ${mask.y}px, #000 0%, transparent 100%)`,
-        } as React.CSSProperties)
-      : ({
-          WebkitMaskImage: "radial-gradient(circle 0px at -999px -999px, transparent, transparent)",
-          maskImage: "radial-gradient(circle 0px at -999px -999px, transparent, transparent)",
-        } as React.CSSProperties);
+    mode === "always"
+      ? undefined
+      : mask.active
+        ? ({
+            WebkitMaskImage: `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${mask.x}px ${mask.y}px, #000 0%, transparent 100%)`,
+            maskImage: `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${mask.x}px ${mask.y}px, #000 0%, transparent 100%)`,
+          } as React.CSSProperties)
+        : ({
+            WebkitMaskImage: "radial-gradient(circle 0px at -999px -999px, transparent, transparent)",
+            maskImage: "radial-gradient(circle 0px at -999px -999px, transparent, transparent)",
+          } as React.CSSProperties);
 
   return (
-    <span ref={wrapRef} className={styles.wrap}>
+    <span
+      ref={wrapRef}
+      className={[styles.wrap, mode === "always" ? styles.wrapAlways : undefined]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <span className={styles.placeholder} aria-hidden="true">
         Creative
       </span>
-      <span className={styles.revealLayer} style={maskStyle} aria-hidden={!mask.active}>
+      <span
+        className={[
+          styles.revealLayer,
+          mode === "always" ? styles.revealLayerAlways : undefined,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        style={maskStyle}
+        aria-hidden={mode === "always" ? !enabled : !mask.active}
+      >
         <span className={styles.creativeMetal}>Creative</span>
       </span>
       <span className={styles.srOnly}>Creative</span>

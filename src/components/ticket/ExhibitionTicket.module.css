@@ -388,6 +388,27 @@
   pointer-events: none;
 }
 
+.sliceHit {
+  position: absolute;
+  top: -10%;
+  right: 3%;
+  left: 3%;
+  z-index: 8;
+  height: 32%;
+  padding: 0;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sliceHit:focus-visible {
+  outline: 3px dashed rgba(43, 37, 32, 0.55);
+  outline-offset: 2px;
+}
+
 .stubContent {
   position: absolute;
   inset: 0;
@@ -444,9 +465,13 @@
 }
 
 .ticketBottomTorn {
+  /* 撕掉后收起占位，避免票面在居中容器里视觉偏上 */
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  aspect-ratio: auto;
+  height: 0;
+  overflow: hidden;
 }
 
 @keyframes ticketMetalShift {

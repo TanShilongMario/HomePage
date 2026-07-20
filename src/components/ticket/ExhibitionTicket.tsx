@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import styles from "./ExhibitionTicket.module.css";
 
 const QR_TARGET = "https://x.com/TanShilong";
+const SLICE_DRAG_THRESHOLD_PX = 24;
 
 export type ExhibitionHallId = "welcome" | "aigc" | "vibe" | "ending";
 
@@ -14,6 +16,8 @@ interface ExhibitionTicketProps {
   isTearing?: boolean;
   isTorn?: boolean;
   passStamped?: boolean;
+  sliceEnabled?: boolean;
+  onSlice?: () => void;
   onHallSelect?: (hall: ExhibitionHallId) => void;
   className?: string;
 }
@@ -72,11 +76,49 @@ export function ExhibitionTicket({
   isTearing = false,
   isTorn = false,
   passStamped = false,
+  sliceEnabled = false,
+  onSlice,
   onHallSelect,
   className,
 }: ExhibitionTicketProps) {
   const issuedLabel = formatIssuedAt(issuedAt);
   const ticketNumber = createTicketNumber(issuedAt);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const slicedRef = useRef(false);
+
+  useEffect(() => {
+    if (!sliceEnabled) {
+      slicedRef.current = false;
+      pointerStartRef.current = null;
+    }
+  }, [sliceEnabled]);
+
+  const finishSlice = () => {
+    if (!sliceEnabled || slicedRef.current) return;
+    slicedRef.current = true;
+    pointerStartRef.current = null;
+    onSlice?.();
+  };
+
+  const handleSlicePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!sliceEnabled) return;
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleSlicePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!sliceEnabled || !pointerStartRef.current) return;
+    const dx = event.clientX - pointerStartRef.current.x;
+    const dy = event.clientY - pointerStartRef.current.y;
+    if (Math.hypot(dx, dy) >= SLICE_DRAG_THRESHOLD_PX) {
+      finishSlice();
+    }
+  };
+
+  const handleSlicePointerUp = () => {
+    if (!sliceEnabled || !pointerStartRef.current) return;
+    finishSlice();
+  };
 
   return (
     <article
@@ -183,6 +225,20 @@ export function ExhibitionTicket({
           aria-hidden="true"
         />
         <div className={styles.perforation} aria-hidden="true" />
+
+        {sliceEnabled && (
+          <button
+            type="button"
+            className={styles.sliceHit}
+            aria-label="Slice to enter"
+            onPointerDown={handleSlicePointerDown}
+            onPointerMove={handleSlicePointerMove}
+            onPointerUp={handleSlicePointerUp}
+            onPointerCancel={() => {
+              pointerStartRef.current = null;
+            }}
+          />
+        )}
 
         <div className={styles.stubContent}>
           <div className={styles.qrWrap}>

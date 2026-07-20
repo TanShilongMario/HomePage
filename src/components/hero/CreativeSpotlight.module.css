@@ -7,6 +7,15 @@
   overflow: visible;
 }
 
+.wrapAlways .placeholder {
+  visibility: hidden;
+}
+
+.revealLayerAlways {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
 /* Size the slot with Inter Bold so "Creative" never clips (Caveat is narrower). */
 .placeholder {
   visibility: hidden;

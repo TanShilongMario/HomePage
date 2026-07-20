@@ -105,6 +105,14 @@
   }
 }
 
+.foregroundCompact {
+  height: clamp(8rem, 22vh, 12rem);
+}
+
+.foregroundCompact .plant {
+  width: min(var(--plant-width), 22vw);
+}
+
 @media (max-width: 768px) {
   .foreground {
     height: clamp(9rem, 25vh, 14rem);

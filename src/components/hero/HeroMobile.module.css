@@ -1,0 +1,347 @@
+.hero {
+  min-height: 100dvh;
+  position: relative;
+  overflow: clip;
+  padding: 0;
+  --foreword-content-top: clamp(3.5rem, 7vh, 4.5rem);
+  --foreword-line-bottom: calc(var(--mobile-tab-height) + 0.35rem);
+  --foreword-line-height: clamp(1.1rem, 2vh, 1.5rem);
+  --foreword-walk-top: clamp(4rem, 12vh, 8rem);
+  --mobile-tab-height: calc(3.65rem + env(safe-area-inset-bottom, 0px));
+  --ticket-width: min(78vw, calc((100dvh - 6rem) * 300 / 820));
+  --ticket-height: calc(var(--ticket-width) * 820 / 300);
+}
+
+.welcomeBlock {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  top: 18vh;
+  z-index: 2;
+  text-align: left;
+  animation: fadeUp 0.8s ease both;
+}
+
+.welcomeExit {
+  z-index: 5;
+  animation: welcomeExitUp 0.48s cubic-bezier(0.45, 0, 0.85, 0.35) forwards;
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 14vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  transform: rotate(-0.6deg);
+}
+
+.titleLine {
+  display: block;
+}
+
+.ctaWrap {
+  position: fixed;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: max(2rem, env(safe-area-inset-bottom, 0px) + 1.5rem);
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+}
+
+.takeTicketButton {
+  width: min(100%, 20rem);
+}
+
+.ticketStage {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  /* 复用全局网格纸背景 */
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: -1px -1px;
+  animation: fadeUp 0.45s ease both;
+}
+
+.ticketStageHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sliceCue {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.fullTicket {
+  width: var(--ticket-width);
+  max-height: calc(100dvh - 5.5rem);
+  pointer-events: auto;
+}
+
+.exhibitStage {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.forewordContent {
+  position: fixed;
+  top: var(--foreword-content-top);
+  left: 1rem;
+  right: 1rem;
+  bottom: calc(var(--mobile-tab-height) + var(--foreword-line-height) + 0.5rem);
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* 给面板上方绝对定位标题 / 语言切换留位，避免被裁切 */
+  padding-top: 2.75rem;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.forewordContentEnter {
+  opacity: 0;
+}
+
+.forewordAside {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: fit-content;
+}
+
+/* 仅正文 .body 滚动；panel 不可 hidden，否则会裁掉标题 */
+.introPanel {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: visible;
+}
+
+.horizon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--foreword-line-bottom);
+  height: calc(100dvh - var(--foreword-walk-top) - var(--foreword-line-bottom));
+  z-index: 6;
+  pointer-events: none;
+}
+
+.horizonEnter {
+  transform: translateY(calc(100% + var(--foreword-line-bottom)));
+  opacity: 0;
+  animation: horizonEnter 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.28s forwards;
+}
+
+.lineWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--foreword-line-height);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.tabBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0;
+  height: var(--mobile-tab-height);
+  padding: 0.25rem 0 env(safe-area-inset-bottom, 0px);
+  border: 0;
+  border-top: 1px solid rgba(43, 37, 32, 0.14);
+  border-radius: 0;
+  background: rgba(239, 237, 231, 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  backdrop-filter: blur(18px) saturate(1.12);
+  pointer-events: auto;
+}
+
+.tabButton {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 3.1rem;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-ink);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabButton:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.tabButton:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: -4px;
+}
+
+.tabTicket {
+  background: transparent;
+}
+
+.tabTicketActive {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.tabTicketIcon {
+  display: block;
+  width: auto;
+  height: 1.85rem;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 1px 1px rgba(43, 37, 32, 0.18));
+}
+
+.tabArrow {
+  display: block;
+  width: auto;
+  height: 1.35rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+.tabArrowLeft {
+  transform: rotate(90deg);
+}
+
+.tabArrowRight {
+  transform: rotate(-90deg);
+}
+
+.pickupLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  /* 上下对称留白，视觉居中（底栏区域仍可点透到 backdrop 关闭） */
+  padding: max(1rem, env(safe-area-inset-top, 0px)) 1rem
+    calc(var(--mobile-tab-height) + 0.5rem);
+}
+
+.pickupBackdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(43, 37, 32, 0.38);
+  -webkit-backdrop-filter: blur(18px) saturate(0.85);
+  backdrop-filter: blur(18px) saturate(0.85);
+  cursor: pointer;
+}
+
+.pickupTicketWrap {
+  position: relative;
+  z-index: 1;
+  width: min(86vw, calc((100dvh - var(--mobile-tab-height) - 3rem) * 300 / 644));
+  max-height: calc(100dvh - var(--mobile-tab-height) - 2.5rem);
+  animation: ticketPickup 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center center;
+  pointer-events: auto;
+}
+
+.pickupTicket {
+  width: 100%;
+  filter: drop-shadow(0 18px 36px rgba(43, 37, 32, 0.28));
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcomeExitUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+}
+
+@keyframes horizonEnter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(100% + var(--foreword-line-bottom)));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ticketPickup {
+  from {
+    opacity: 0;
+    transform: translateY(8%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcomeBlock,
+  .ticketStage,
+  .pickupTicketWrap,
+  .horizonEnter {
+    animation: none;
+  }
+
+  .horizonEnter {
+    opacity: 1;
+    transform: none;
+  }
+
+  .forewordContentEnter {
+    opacity: 1;
+  }
+}

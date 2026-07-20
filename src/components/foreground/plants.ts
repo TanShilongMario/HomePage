@@ -123,6 +123,20 @@ function plant(
  * 1–10 是从左到右的主序列；b / c 后缀实例穿插在主序列间隙。
  * 主序列 Plant 3 / 6 / 7 仍处于最高遮挡层，重复实例用于补足前景密度。
  */
+/** 竖屏精简：仅主序列 1–10，去掉 b/c 补密度实例 */
+export const PLANT_LAYOUT_COMPACT_IDS = new Set([
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+]);
+
 export const PLANT_LAYOUT: readonly PlantLayoutItem[] = [
   plant("1", 1, {
     left: "-7%", width: "clamp(13rem, 22.5vw, 26rem)", bottom: "-38%", zIndex: 18,

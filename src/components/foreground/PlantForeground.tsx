@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
-import { PLANT_LAYOUT, type PlantDepth } from "./plants";
+import { useEffect, useMemo, useRef, type CSSProperties } from "react";
+import { PLANT_LAYOUT, PLANT_LAYOUT_COMPACT_IDS, type PlantDepth } from "./plants";
 import styles from "./PlantForeground.module.css";
 
 export type PlantRoom = "foreword" | "gallery" | "vibe" | "ending";
@@ -11,6 +11,8 @@ interface PlantForegroundProps {
   room: PlantRoom;
   entering?: boolean;
   traveling?: boolean;
+  /** 竖屏减少植株数量 */
+  compact?: boolean;
 }
 
 type PlantStyle = CSSProperties & Record<`--${string}`, string | number>;
@@ -27,13 +29,22 @@ const HOVER_SHIFT: Record<PlantDepth, number> = {
   near: 7,
 };
 
+const PLANT_LAYOUT_COMPACT = PLANT_LAYOUT.filter((plant) =>
+  PLANT_LAYOUT_COMPACT_IDS.has(plant.id),
+);
+
 export function PlantForeground({
   mouse,
   room,
   entering = false,
   traveling = false,
+  compact = false,
 }: PlantForegroundProps) {
   const plantRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const plants = useMemo(
+    () => (compact ? PLANT_LAYOUT_COMPACT : PLANT_LAYOUT),
+    [compact],
+  );
 
   useEffect(() => {
     let rafId = 0;
@@ -41,7 +52,7 @@ export function PlantForeground({
     rafId = window.requestAnimationFrame(() => {
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      PLANT_LAYOUT.forEach((plant, index) => {
+      plants.forEach((plant, index) => {
         const element = plantRefs.current[index];
         if (!element) return;
 
@@ -68,18 +79,22 @@ export function PlantForeground({
     });
 
     return () => window.cancelAnimationFrame(rafId);
-  }, [mouse]);
+  }, [mouse, plants]);
 
   return (
     <div
-      className={[styles.foreground, entering ? styles.foregroundEntering : undefined]
+      className={[
+        styles.foreground,
+        entering ? styles.foregroundEntering : undefined,
+        compact ? styles.foregroundCompact : undefined,
+      ]
         .filter(Boolean)
         .join(" ")}
       data-room={room}
       data-traveling={traveling ? "true" : "false"}
       aria-hidden="true"
     >
-      {PLANT_LAYOUT.map((plant, index) => {
+      {plants.map((plant, index) => {
         const style: PlantStyle = {
           "--plant-left": plant.left,
           "--plant-width": plant.width,
