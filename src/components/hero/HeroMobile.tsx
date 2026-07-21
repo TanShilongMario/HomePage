@@ -124,6 +124,8 @@ export function HeroMobile({ introduction, flow }: HeroMobileProps) {
               ? "AIGC Gallery"
               : phase === "vibe"
                 ? "Vibe Coding Room"
+                : phase === "notes"
+                  ? "Notes From Corner"
                 : phase === "ending"
                   ? "Ending Show"
                   : "扉页"
@@ -166,6 +168,11 @@ export function HeroMobile({ introduction, flow }: HeroMobileProps) {
               active={phase === "vibe"}
               title="Vibe Coding Room"
               exiting={phase === "vibe" && isRoomTransitioning}
+            />
+            <ConstructionRoomStage
+              active={phase === "notes"}
+              title="Notes From Corner"
+              exiting={phase === "notes" && isRoomTransitioning}
             />
             <ConstructionRoomStage
               active={phase === "ending"}

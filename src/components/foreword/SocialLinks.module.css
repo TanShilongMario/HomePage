@@ -103,6 +103,98 @@
   transition-delay: 0s;
 }
 
+.qrOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 5vw, 2.5rem);
+  isolation: isolate;
+  animation: qrOverlayIn 0.32s ease-out both;
+}
+
+.qrOverlayBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(31, 31, 31, 0.74);
+  -webkit-backdrop-filter: blur(18px) saturate(72%);
+  backdrop-filter: blur(18px) saturate(72%);
+  cursor: pointer;
+}
+
+.qrOverlayExit {
+  position: fixed;
+  top: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  padding: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(31, 31, 31, 0.48);
+  font-family: var(--font-body);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.qrOverlayExit span {
+  transform: translateY(-0.06em);
+}
+
+.qrOverlayExit:focus-visible {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: 4px;
+}
+
+.qrOverlayCard {
+  position: relative;
+  z-index: 1;
+  width: min(18rem, 78vw);
+  padding: clamp(1rem, 4vw, 1.35rem);
+  border: 2px solid rgba(43, 37, 32, 0.82);
+  border-radius: 0.35rem 0.6rem 0.3rem 0.5rem;
+  color: var(--color-ink);
+  background: rgba(248, 247, 244, 0.96);
+  box-shadow: 0.65rem 0.85rem 0 rgba(43, 37, 32, 0.16);
+  transform: rotate(-0.35deg);
+}
+
+.qrOverlayLabel {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.qrOverlayCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.4rem;
+  user-select: none;
+}
+
+@keyframes qrOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 768px) {
   .column {
     align-items: flex-start;
@@ -116,15 +208,9 @@
     padding: 0;
   }
 
+  /* 移动端改为全局遮罩，不再用侧边/下方 popover */
   .qrPopover {
-    top: calc(100% + 0.5rem);
-    left: 0;
-    transform: translateY(-0.35rem);
-  }
-
-  .item:hover .qrPopover,
-  .item:focus-within .qrPopover {
-    transform: translateY(0);
+    display: none;
   }
 }
 
@@ -138,7 +224,9 @@
   }
 
   .control,
-  .qrPopover {
+  .qrPopover,
+  .qrOverlay {
     transition: none;
+    animation: none;
   }
 }

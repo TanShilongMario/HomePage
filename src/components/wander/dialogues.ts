@@ -96,6 +96,26 @@ export const WANDER_DIALOGUES = {
       "Come back soon",
     ],
   },
+  notesFromCorner: {
+    idle: [
+      "...",
+      "A new note",
+      "Good thought",
+      "Worth writing",
+      "Read this",
+      "From the corner",
+      "One more idea",
+      "Page by page",
+    ],
+    click: [
+      "!",
+      "Hey, reader",
+      "Take a note",
+      "Keep reading",
+      "Thoughts?",
+      "More soon",
+    ],
+  },
   endingShow: {
     idle: [
       "...",

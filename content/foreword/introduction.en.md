@@ -8,9 +8,9 @@ That is why I did not turn this place into a conventional résumé. Instead, I b
 
 ## Now on View
 
-- **AI × Art** — curious works of “art” I create with AI
-- **Vibe Tools** — small tools that make complex creative work feel simple, such as [PromptFill](https://aipromptfill.com)
-- **Notes from the Corner** — ongoing observations and experiments from my WeChat publication, *AI World in the Corner*
+- **AIGC Gallery** — curious works of “art” I create with AI
+- **Vibe Coding Room** — small tools that make complex creative work feel simple, such as [PromptFill](https://aipromptfill.com)
+- **Notes From Corner** — ongoing observations and experiments from my WeChat publication, *AI World in the Corner*
 
 There is no prescribed route. You can take the exhibition seriously or simply wander around — open a project, take an idea home with you, or discover an easter egg tucked away in some corner.
 

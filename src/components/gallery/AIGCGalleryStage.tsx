@@ -6,6 +6,7 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
@@ -209,6 +210,7 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
   const [immersiveOpen, setImmersiveOpen] = useState(false);
   const [failedArtworkId, setFailedArtworkId] = useState<string | null>(null);
   const [imageAttempt, setImageAttempt] = useState(0);
+  const [artworkDirection, setArtworkDirection] = useState<-1 | 1>(1);
   const infoId = useId();
   const isCompactLayout = useMediaQuery("(max-width: 768px)");
   const artwork = AIGC_ARTWORKS[activeIndex];
@@ -217,6 +219,7 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
   const closeInfoOverlay = useCallback(() => setInfoOpen(false), []);
 
   const moveArtwork = (direction: -1 | 1) => {
+    setArtworkDirection(direction);
     setActiveIndex((current) => wrapIndex(current + direction, AIGC_ARTWORKS.length));
     setInfoOpen(false);
     setFailedArtworkId(null);
@@ -258,7 +261,10 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
 
       <div className={[styles.cluster, exiting ? styles.clusterExit : undefined].filter(Boolean).join(" ")}>
         <div className={styles.frame}>
-          <div className={styles.frameContent}>
+          <div
+            className={styles.frameContent}
+            data-direction={artworkDirection === 1 ? "next" : "previous"}
+          >
             <img
               key={`backdrop-${artwork.id}-${imageAttempt}`}
               className={styles.artworkBackdrop}
@@ -352,10 +358,61 @@ export function AIGCGalleryStage({ active = false, exiting = false }: AIGCGaller
           )}
         </div>
 
-        <nav className={styles.artworkNavigation} aria-label="Artwork navigation">
-          <button type="button" onClick={() => moveArtwork(-1)} aria-label="Previous artwork">←</button>
-          <span aria-hidden="true">{String(activeIndex + 1).padStart(2, "0")} / {String(AIGC_ARTWORKS.length).padStart(2, "0")}</span>
-          <button type="button" onClick={() => moveArtwork(1)} aria-label="Next artwork">→</button>
+        <nav
+          className={styles.artworkNavigation}
+          aria-label="Artwork navigation"
+          style={
+            {
+              "--gallery-progress":
+                AIGC_ARTWORKS.length > 1 ? activeIndex / (AIGC_ARTWORKS.length - 1) : 0,
+            } as CSSProperties
+          }
+        >
+          <span className={styles.galleryRail} aria-hidden="true" />
+          <button
+            type="button"
+            className={`${styles.railPull} ${styles.railPullPrevious}`}
+            onClick={() => moveArtwork(-1)}
+            aria-label="Previous artwork"
+          >
+            <svg
+              className={styles.railPullIcon}
+              viewBox="0 0 32 32"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M21 6.5L10.5 16.2L20.4 25.3" />
+              <path className={styles.railPullEcho} d="M23.2 7.3L13 16L22.6 24.4" />
+            </svg>
+          </button>
+          <span
+            className={styles.accessionLabel}
+            role="status"
+            aria-live="polite"
+            aria-label={`AIGC artwork ${activeIndex + 1} of ${AIGC_ARTWORKS.length}`}
+          >
+            <span aria-hidden="true">AIGC</span>
+            <span className={styles.accessionDot} aria-hidden="true">·</span>
+            <span aria-hidden="true">
+              {String(activeIndex + 1).padStart(2, "0")} / {String(AIGC_ARTWORKS.length).padStart(2, "0")}
+            </span>
+          </span>
+          <button
+            type="button"
+            className={`${styles.railPull} ${styles.railPullNext}`}
+            onClick={() => moveArtwork(1)}
+            aria-label="Next artwork"
+          >
+            <svg
+              className={`${styles.railPullIcon} ${styles.railPullIconNext}`}
+              viewBox="0 0 32 32"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M21 6.5L10.5 16.2L20.4 25.3" />
+              <path className={styles.railPullEcho} d="M23.2 7.3L13 16L22.6 24.4" />
+            </svg>
+          </button>
         </nav>
       </div>
 

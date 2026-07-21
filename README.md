@@ -43,9 +43,10 @@ npm run dev
 
 ```text
 src/components/gallery/artworks.ts
+src/components/gallery/importedArtworks.ts
 ```
 
-画廊同时支持放在仓库内的本地图片和 `https://` 图床图片。画框、说明浮窗、循环切换和沉浸查看会自动读取同一份数据，新增作品时不需要修改画廊组件。
+`artworks.ts` 保存手工维护的核心作品并汇总最终播放列表；`importedArtworks.ts` 保存从 Prompt Fill 个人作品库筛选、展开变量后导入的作品。画廊同时支持放在仓库内的本地图片和 `https://` 图床图片。画框、说明浮窗、循环切换和沉浸查看会自动读取最终列表，新增作品时不需要修改画廊组件。
 
 ### 增加本地图片
 
@@ -119,6 +120,8 @@ image: {
 | `tools` | 否 | 使用的生成工具或后期工具 |
 | `series` | 否 | 所属作品系列 |
 | `featured` | 否 | 为未来的精选筛选预留，目前不改变排序 |
+| `author` | 否 | 作品作者；外部作品库导入时建议保留 |
+| `sourceTemplateId` | 否 | Prompt Fill 原模板 ID，方便追溯和去重 |
 
 数组中的先后顺序就是画廊的播放顺序。左右按钮采用循环逻辑，因此最后一张之后会回到第一张。保存数据或替换同名图片后，开发服务会自动更新；通常刷新浏览器即可，不需要重启服务。
 

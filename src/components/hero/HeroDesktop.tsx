@@ -194,6 +194,8 @@ export function HeroDesktop({ introduction, flow }: HeroDesktopProps) {
               ? "AIGC Gallery"
               : phase === "vibe"
                 ? "Vibe Coding Room"
+                : phase === "notes"
+                  ? "Notes From Corner"
                 : phase === "ending"
                   ? "Ending Show"
                   : "扉页"
@@ -237,6 +239,11 @@ export function HeroDesktop({ introduction, flow }: HeroDesktopProps) {
               exiting={phase === "vibe" && isRoomTransitioning}
             />
             <ConstructionRoomStage
+              active={phase === "notes"}
+              title="Notes From Corner"
+              exiting={phase === "notes" && isRoomTransitioning}
+            />
+            <ConstructionRoomStage
               active={phase === "ending"}
               title="Ending Show"
               exiting={phase === "ending" && isRoomTransitioning}
@@ -257,6 +264,8 @@ export function HeroDesktop({ introduction, flow }: HeroDesktopProps) {
                       ? "aigcGallery"
                       : phase === "vibe"
                         ? "vibeCoding"
+                        : phase === "notes"
+                          ? "notesFromCorner"
                         : phase === "ending"
                           ? "endingShow"
                           : "foreword"

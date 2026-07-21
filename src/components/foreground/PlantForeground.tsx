@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, type CSSProperties } from "react";
 import { PLANT_LAYOUT, PLANT_LAYOUT_COMPACT_IDS, type PlantDepth } from "./plants";
 import styles from "./PlantForeground.module.css";
 
-export type PlantRoom = "foreword" | "gallery" | "vibe" | "ending";
+export type PlantRoom = "foreword" | "gallery" | "vibe" | "notes" | "ending";
 
 interface PlantForegroundProps {
   mouse: { x: number; y: number } | null;

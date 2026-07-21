@@ -9,9 +9,9 @@
 ## 本馆正在展出
 
 
-- **AI × Art**：我用AI创作的有趣的“艺术”
-- **Vibe Tools**：让复杂创作变简单的小工具，比如 [PromptFill 提示词填空器](https://aipromptfill.com)
-- **Notes from the Corner**：我在公众号「角落里的AI世界」持续记录的观察与实践
+- **AIGC Gallery**：我用 AI 创作的有趣的“艺术”
+- **Vibe Coding Room**：让复杂创作变简单的小工具，比如 [PromptFill 提示词填空器](https://aipromptfill.com)
+- **Notes From Corner**：我在公众号「角落里的AI世界」持续记录的观察与实践
 
 这里没有规定路线。你可以认真看展，也可以随便乱逛；点开一件作品，带走一个灵感，或者在某个角落发现一只彩蛋。
 

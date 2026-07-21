@@ -42,21 +42,27 @@
 .plant[data-depth="far"] {
   --vibe-room-x: 4px;
   --vibe-room-y: 0px;
-  --ending-room-x: 8px;
+  --notes-room-x: 8px;
+  --notes-room-y: 1px;
+  --ending-room-x: 12px;
   --ending-room-y: 1px;
 }
 
 .plant[data-depth="middle"] {
   --vibe-room-x: 9px;
   --vibe-room-y: -1px;
-  --ending-room-x: 18px;
+  --notes-room-x: 18px;
+  --notes-room-y: -2px;
+  --ending-room-x: 27px;
   --ending-room-y: -2px;
 }
 
 .plant[data-depth="near"] {
   --vibe-room-x: 15px;
   --vibe-room-y: -3px;
-  --ending-room-x: 30px;
+  --notes-room-x: 30px;
+  --notes-room-y: -6px;
+  --ending-room-x: 45px;
   --ending-room-y: -6px;
 }
 
@@ -67,11 +73,18 @@
   --room-blur: calc(var(--gallery-blur) + 0.18px);
 }
 
+.foreground[data-room="notes"] .plant {
+  --room-x: calc(var(--gallery-x) + var(--notes-room-x));
+  --room-y: calc(var(--gallery-y) + var(--notes-room-y));
+  --room-scale: calc(var(--gallery-scale) + 0.014);
+  --room-blur: calc(var(--gallery-blur) + 0.32px);
+}
+
 .foreground[data-room="ending"] .plant {
   --room-x: calc(var(--gallery-x) + var(--ending-room-x));
   --room-y: calc(var(--gallery-y) + var(--ending-room-y));
-  --room-scale: calc(var(--gallery-scale) + 0.014);
-  --room-blur: calc(var(--gallery-blur) + 0.32px);
+  --room-scale: calc(var(--gallery-scale) + 0.02);
+  --room-blur: calc(var(--gallery-blur) + 0.46px);
 }
 
 .foreground[data-traveling="true"] .plant {

@@ -2,12 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import {
+  HALL_STICKER_ORDER,
+  HALL_STICKER_PRESETS,
+  PASS_STICKER_OPTIONS,
+  PASS_STICKER_SOURCE,
+  StickerForge,
+} from "@/components/sticker";
 import styles from "./ExhibitionTicket.module.css";
 
 const QR_TARGET = "https://x.com/TanShilong";
 const SLICE_DRAG_THRESHOLD_PX = 24;
 
-export type ExhibitionHallId = "welcome" | "aigc" | "vibe" | "ending";
+export type ExhibitionHallId = "welcome" | "aigc" | "vibe" | "notes" | "ending";
 
 interface ExhibitionTicketProps {
   issuedAt: Date;
@@ -43,6 +50,11 @@ const HALLS: HallItem[] = [
     id: "vibe",
     title: "Vibe Coding Room",
     subtitle: "Magic tool for magic tools",
+  },
+  {
+    id: "notes",
+    title: "Notes From Corner",
+    subtitle: "Thoughts from the little corner",
   },
   {
     id: "ending",
@@ -168,7 +180,6 @@ export function ExhibitionTicket({
             <p className={styles.sectionLabel}>Exhibition Hall</p>
             <ol>
               {HALLS.map((hall, index) => {
-                const visited = visitedHalls.includes(hall.id);
                 const enabled = enabledHalls.includes(hall.id);
                 return (
                   <li key={hall.id}>
@@ -183,7 +194,6 @@ export function ExhibitionTicket({
                         <strong>{hall.title}</strong>
                         <small>{hall.subtitle}</small>
                       </span>
-                      {visited && <span className={styles.smallStamp}>VISITED</span>}
                     </button>
                   </li>
                 );
@@ -198,9 +208,39 @@ export function ExhibitionTicket({
         </div>
 
         {passStamped && (
-          <div className={styles.passStamp} aria-label="Cleared to wander">
-            <span>WANDER</span>
-            <small>ADMITTED · CORNER STUDIO</small>
+          <div className={styles.passStickerSlot} aria-label="Pass sticker, Corner museum">
+            <StickerForge
+              source={PASS_STICKER_SOURCE}
+              options={PASS_STICKER_OPTIONS}
+              aria-label="Pass, Corner museum"
+            />
+          </div>
+        )}
+
+        {visitedHalls.length > 0 && (
+          <div className={styles.hallStickerField} aria-label="Visited hall stickers">
+            {HALL_STICKER_ORDER.map((hallId, slot) => {
+              if (!visitedHalls.includes(hallId)) return null;
+              const preset = HALL_STICKER_PRESETS[hallId];
+              return (
+                <div
+                  key={hallId}
+                  className={styles.hallStickerSlot}
+                  data-slot={slot}
+                  style={
+                    {
+                      "--hall-sticker-tilt": `${preset.rotateDeg}deg`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <StickerForge
+                    source={preset.source}
+                    options={preset.options}
+                    aria-label={`${hallId} visited sticker`}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

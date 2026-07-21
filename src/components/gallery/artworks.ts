@@ -1,3 +1,5 @@
+import { IMPORTED_AIGC_ARTWORKS } from "./importedArtworks";
+
 export interface AIGCArtworkImage {
   src: string;
   alt: string;
@@ -24,30 +26,11 @@ export interface AIGCArtwork {
   tools?: readonly string[];
   series?: string;
   featured?: boolean;
+  author?: string;
+  sourceTemplateId?: string;
 }
 
-export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
-  {
-    id: "gym-girl",
-    title: "健身房的小姐姐",
-    image: {
-      src: "/assets/AIGCArtwork/Gym_Girl.png",
-      alt: "A vertical AIGC portrait titled Gym Girl",
-      width: 928,
-      height: 1232,
-    },
-    description: {
-      prompt:
-        "Fitness Selfie Scene Core Atmosphere: A raw, candid mirror selfie snapshot taken in a busy gym with an on-camera flash firing. Subject: A young pretty Chinese Jiangnan woman with a wanghong face and gentle Eastern charm, with Healthy athletic build. She is in a Half-squat pose, turned sideways to mirror, turned sideways to the mirror, holding a smartphone. Clothing & Appearance: Wearing Sports skirt, tight and form-fitting. Hair is Hair disheveled and damp with sweat, and cheeks are flushed red, showing clear signs of a recent workout. Facial Expression: Cheeks flushed red, dreamy and slightly unfocused eyes Scene Details: Busy gym with mirrors and equipment visible Selfie Style: Raw, authentic mirror selfie Technical Effects: The photo has noticeable On-camera flash firing, creating an authentic, unposed daily life atmosphere. Specifications",
-      concept:
-        "谁不喜欢好看的小姐姐呢？",
-    },
-    tags: ["Portrait", "Cinematic", "Character"],
-    year: 2026,
-    tools: ["MidJourney"],
-    series: "Character Studies",
-    featured: true,
-  },
+const CORE_AIGC_ARTWORKS: readonly AIGCArtwork[] = [
   {
     id: "lego-car",
     title: "Lego Car",
@@ -89,23 +72,6 @@ export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
     series: "Character Studies",
   },
   {
-    id: "remote-study-one",
-    title: "Master Poster",
-    image: {
-      src: "https://s3.bmp.ovh/2026/05/06/DLtOVgSJ.png",
-      alt: "An AIGC artwork hosted on the external image library",
-    },
-    description: {
-      prompt:
-        "以知名建筑「范斯沃斯住宅」为场景，制作一个高端的极简主义的海报 海报中心是建筑的插画形式的表达，背景是一个单词，以巨大加粗的设计风格描述的英文字体，需要与建筑相匹配，周边是一些小字，用于描述建筑的设计哲学 整体以一种极其高端的艺术海报形式呈现 用色搭配克制不张扬，与建筑有一些搭配组合，例如恰好构成了建筑的一些构件或作为建筑的整体向外的一部分延展",
-      concept:
-        "当AI的审美与思考已经可以超越80%的人类，那我们就让它自行发挥吧",
-    },
-    tags: ["Remote", "Experiment"],
-    year: 2026,
-    tools: ["GPT-image-2"],
-  },
-  {
     id: "remote-study-two",
     title: "Chinese Ink",
     image: {
@@ -122,4 +88,10 @@ export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
     year: 2026,
     tools: ["MidJourney"],
   },
+];
+
+/** 手工维护作品在前，Prompt Fill 筛选作品随后；数组顺序即画廊播放顺序。 */
+export const AIGC_ARTWORKS: readonly AIGCArtwork[] = [
+  ...CORE_AIGC_ARTWORKS,
+  ...IMPORTED_AIGC_ARTWORKS,
 ];

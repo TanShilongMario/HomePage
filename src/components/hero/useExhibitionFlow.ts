@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import type { ExhibitionHallId } from "@/components/ticket";
 import type { PlantRoom } from "@/components/foreground";
 
-export type ExhibitionRoom = "foreword" | "gallery" | "vibe" | "ending";
+export type ExhibitionRoom = "foreword" | "gallery" | "vibe" | "notes" | "ending";
 export type ExhibitionPhase = "welcome" | "ticket" | ExhibitionRoom;
 
 /** 与 forewordHorizonEnter 一致：0.28s delay + 0.72s duration */
@@ -25,12 +25,14 @@ export const EXHIBITION_ROOMS: readonly ExhibitionRoom[] = [
   "foreword",
   "gallery",
   "vibe",
+  "notes",
   "ending",
 ];
 export const EXHIBITION_HALLS: readonly ExhibitionHallId[] = [
   "welcome",
   "aigc",
   "vibe",
+  "notes",
   "ending",
 ];
 
@@ -38,6 +40,7 @@ export const ROOM_TO_HALL: Record<ExhibitionRoom, ExhibitionHallId> = {
   foreword: "welcome",
   gallery: "aigc",
   vibe: "vibe",
+  notes: "notes",
   ending: "ending",
 };
 
@@ -45,6 +48,7 @@ export const HALL_TO_ROOM: Record<ExhibitionHallId, ExhibitionRoom> = {
   welcome: "foreword",
   aigc: "gallery",
   vibe: "vibe",
+  notes: "notes",
   ending: "ending",
 };
 
