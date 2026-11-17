@@ -16,6 +16,55 @@ function inlineMarkdown(text: string): string {
   return out;
 }
 
+/** Line-based markdown → HTML for artwork prompts: headings, lists with continuation lines, paragraphs. */
+export function renderPromptMarkdown(source: string): string {
+  const html: string[] = [];
+  let paragraph: string[] = [];
+  const list: { tag: "ul" | "ol" | null; items: string[] } = { tag: null, items: [] };
+
+  const flushParagraph = () => {
+    if (paragraph.length) html.push(`<p>${paragraph.join("<br />")}</p>`);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (list.tag) html.push(`<${list.tag}>${list.items.map((item) => `<li>${item}</li>`).join("")}</${list.tag}>`);
+    list.tag = null;
+    list.items = [];
+  };
+
+  for (const rawLine of source.trim().split("\n")) {
+    const line = rawLine.trim();
+    const heading = line.match(/^#{1,6}\s+(.*)$/);
+    const bullet = line.match(/^[-*]\s+(.*)$/);
+    const ordered = line.match(/^\d+[.)]\s+(.*)$/);
+
+    if (!line) {
+      flushParagraph();
+      flushList();
+    } else if (heading) {
+      flushParagraph();
+      flushList();
+      html.push(`<h3>${inlineMarkdown(heading[1])}</h3>`);
+    } else if (bullet || ordered) {
+      flushParagraph();
+      const tag = bullet ? "ul" : "ol";
+      if (list.tag !== tag) {
+        flushList();
+        list.tag = tag;
+      }
+      list.items.push(inlineMarkdown((bullet ?? ordered)![1]));
+    } else if (list.tag) {
+      list.items[list.items.length - 1] += `<br />${inlineMarkdown(line)}`;
+    } else {
+      paragraph.push(inlineMarkdown(line));
+    }
+  }
+
+  flushParagraph();
+  flushList();
+  return html.join("\n");
+}
+
 /** Minimal markdown → HTML for foreword intro copy. */
 export function renderMarkdown(source: string): string {
   const blocks = source.trim().split(/\n\n+/);
